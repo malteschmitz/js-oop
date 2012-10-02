@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>extends operator for prototypical inheritance</title>
+</head>
+<body>
+<h1>extends operator for prototypical inheritance</h1>
+<pre>
+<script>
+var a = {
+  foo: 12
+};
+
+// There is no way of getting or setting the prototype of an already created
+// object. In classic JavaScript (< ES5) you can only do this using the new
+// operator.
+
+var ext = function(o) {
+  var f = function(){};
+  f.prototype = o;
+  return new f();
+}
+
+var b = ext(a);
+b.bar = 13;
+
+document.writeln('b.bar: ' + b.bar); // 13
+document.writeln('b.foo: ' + b.foo); // 12
+
+// Every object literal inherits from Object.prototype and we can modify
+// this prototype and add attributes on it.
+
+Object.prototype.c = 14;
+
+document.writeln('a.c: ' + a.c); // 14
+document.writeln('b.c: ' + b.c); // 14
+b.c = -1; // set c property of b and hide inherited property c of a which
+          // inherits the a from Object.prototype
+document.writeln('a.c: ' + a.c); // 14
+document.writeln('b.c: ' + b.c); // -1
+</script>
+</pre>
+</body>
+</html>
