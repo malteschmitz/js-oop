@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>prototypical inheritance</title>
+</head>
+<body>
+<h1>prototypical inheritance</h1>
+<pre>
+<script>
+  (function() {
+    "use strict";
+    function new_constructor(extend, initializer, methods) {
+      var func, prototype;
+      prototype = Object.create(extend && extend.prototype);
+      if (methods) {
+        Object.keys(methods).forEach(function(key) {
+          prototype[key] = methods[key];
+        });
+      }
+      func = function() {
+        var that = Object.create(prototype);
+        if (typeof initializer === 'function') {
+          initializer.apply(that, arguments);
+        }
+        return that;
+      }
+      func.prototype = prototype;
+      prototype.constructor = func;
+      return func;
+    }
+    
+    var gizmo = new_constructor(Object, function(id){
+      this.id = id;
+    }, {
+      toString: function() {
+        return "gizmo " + this.id;
+      }
+    });
+    
+    var hoozit = new_constructor(gizmo, function(id) {
+      this.id = id;
+    }, {
+      test: function(id) {
+        return this.id === id;
+      }
+    });
+    
+    var g = gizmo(5);
+    document.writeln(g);
+    var h = hoozit(6);
+    document.writeln(h);
+    document.writeln(h.test(6));
+  }());
+</script>
+</pre>
+</body>
+</html>
