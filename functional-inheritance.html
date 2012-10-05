@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>functional inheritance</title>
+</head>
+<body>
+<h1>functional inheritance</h1>
+<pre>
+<script>
+function gizmo(id) {
+  return {
+    toString: function() {
+      return "gizmo " + id;
+    }
+  }
+}
+function hoozit(id) {
+  var that = gizmo(id);
+  that.test = function(testid) {
+    return id === testid;
+  }
+  return that;
+}
+
+var g = gizmo(5);
+var h = hoozit(6);
+document.writeln(g);
+document.writeln(h);
+document.writeln(h.test(6));
+</script>
+</pre>
+</body>
+</html>
