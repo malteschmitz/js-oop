@@ -21,6 +21,7 @@
   }
   // Hoozit extends Gizmo
   Hoozit.prototype = new Gizmo();
+  Hoozit.prototype.constructor = Hoozit;
   Hoozit.prototype.test = function(id) {
     return this.id === id;
   }
@@ -30,6 +31,9 @@
   document.writeln(h.test(5)); // true
   var g = new Gizmo(6);
   document.writeln(typeof g.test) // undefined
+  
+  document.writeln(h.constructor);
+  document.writeln(g.constructor);
 </script>
 </pre>
 </body>
