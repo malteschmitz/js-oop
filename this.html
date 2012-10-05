@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>this</title>
+</head>
+<body>
+<h1>this</h1>
+<pre>
+<script>
+// In ES5 this gets undefined if you call a function in the function form
+function foo() {
+  "use strict";
+  document.writeln(this);
+  if (typeof this === 'object') {
+    document.writeln('--> ' + this.a);
+  }
+}
+foo.prototype.a = 12;
+// prior to ES5 this gets the global object if you call a function in the
+// function form
+function bar() {
+  document.writeln(this);
+}
+foo();
+bar();
+var o = {};
+o.foo = foo;
+o.foo();
+foo.apply(42);
+new foo();
+</script>
+</pre>
+</body>
+</html>
