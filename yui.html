@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>YUI and Y.extend</title>
+</head>
+<body>
+<h1>YUI and Y.extend</h1>
+<pre id="pre"></pre>
+<script src="libs/yui/yui.js"></script>
+<script src="libs/yui/oop.js"></script>
+<script>
+YUI().use('oop', function(Y){
+  // pseudo-classical inhertance
+  // ---------------------------
+
+  // parent
+  function Person() {
+    // "own" members
+    this.name = "Adam";
+  }
+  
+  // properties of the parent's prototype
+  Person.prototype.getName = function() {
+    return this.name;
+  };
+  
+  // child constructor
+  function Programmer(){}
+  
+  Y.extend(Programmer, // the object to modify
+    Person, // the object to inherit
+    {foo: true}, // prototype properties to add/override
+    {limit: "sky"} // static properties to add/override
+  );
+  
+  var guru = new Programmer();
+  
+  var pre = document.getElementById('pre');
+  var writeln = function(s) {
+    pre.innerHTML = pre.innerHTML + s + '\n';
+  };
+  writeln(typeof guru.getName);
+  
+  // foo is now a property of the child's prototype
+  writeln(typeof Programmer.prototype.foo); // "boolean"
+  
+  // the property works for all new objects
+  var bob = new Programmer();
+  writeln(bob.foo); // true
+  
+  // adding to the constructor is more for 
+  // "static" properties meant to act as constants
+  writeln(Programmer.limit); // "sky"
+  writeln(bob.limit); // undefined
+  
+  writeln(bob.constructor === Programmer); // true
+  writeln(bob.constructor.superclass === Person.prototype); // true
+  writeln(bob.constructor.superclass.constructor === Person); // true
+  
+  writeln('----------------------');
+  
+  // prototypical inheritance
+  // ------------------------
+  
+  // parent object, created with a simple object literal
+  var parent = {
+    name: "John",
+    family: "Wayne",
+    say: function() {
+      return "I am " + this.name + " " + this.family;
+    }
+  };
+  
+  // the inheritance magic
+  // a new object is born from an existing one
+  // this is the same as Object.create(parent)
+  var batman = Y.Object(parent);
+  
+  // customize or augment the new object
+  batman.name = "Bruce";
+  
+  // use
+  writeln(batman.say()); // I am Bruce Wayne
+});
+</script>
+</body>
+</html>
