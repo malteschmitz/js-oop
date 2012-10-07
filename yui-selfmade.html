@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>YUI and Y.extend</title>
+</head>
+<body>
+<h1>YUI and Y.extend</h1>
+<pre>
+<script>
+  if (typeof Object.create !== 'function') {
+    Object.create = function(o) {
+      function F(){}
+      F.prototype = o;
+      return new F();
+    }
+  }
+  
+  function copyProperties(from,to) {
+    for (var key in from) {
+      if (Object.prototype.hasOwnProperty.call(from, key)) {
+        to[key] = from[key];
+      }
+    }
+  }
+  
+  // r - receiver: the function to modify
+  // s - sender: the function to inherit from
+  // px - prototype properties to add to r.prototype
+  // sx - static propoperties to add to r
+  Yextend = function(r, s, px, sx) {
+    r.prototype = Object.create(s.prototype);
+    r.prototype.constructor = r;
+    r.superclass = s.prototype;
+    // fix constructor property of sender
+    if (s != Object && s.prototype.constructor == Object.prototype.constructor) {
+        s.prototype.constructor = s;
+    }
+    // add prototype overrides
+    if (px) {
+        copyProperties(px, r.prototype);
+    }
+    // add object overrides
+    if (sx) {
+        copyProperties(sx, r);
+    }
+    return r;
+  };
+  
+  
+  // parent
+  function Person() {
+    // "own" members
+    this.name = "Adam";
+  }
+  
+  // properties of the parent's prototype
+  Person.prototype.getName = function() {
+    return this.name;
+  };
+  
+  // child constructor
+  function Programmer(){}
+  
+  Yextend(Programmer, // the object to modify
+    Person, // the object to inherit
+    {foo: true}, // prototype properties to add/override
+    {limit: "sky"} // static properties to add/override
+  );
+  
+  var guru = new Programmer();
+  
+  document.writeln(typeof guru.getName);
+  
+  // foo is now a property of the child's prototype
+  document.writeln(typeof Programmer.prototype.foo); // "boolean"
+  
+  // the property works for all new objects
+  var bob = new Programmer();
+  document.writeln(bob.foo); // true
+  
+  // adding to the constructor is more for 
+  // "static" properties meant to act as constants
+  document.writeln(Programmer.limit); // "sky"
+  document.writeln(bob.limit); // undefined
+  
+  document.writeln(bob.constructor === Programmer); // true
+  document.writeln(bob.constructor.superclass === Person.prototype); // true
+  document.writeln(bob.constructor.superclass.constructor === Person); // true
+</script>
+</pre>
+</body>
+</html>
