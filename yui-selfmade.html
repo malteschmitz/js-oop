@@ -23,12 +23,14 @@
       }
     }
   }
+
+  var Y = {};
   
   // r - receiver: the function to modify
   // s - sender: the function to inherit from
   // px - prototype properties to add to r.prototype
   // sx - static propoperties to add to r
-  Yextend = function(r, s, px, sx) {
+  Y.extend = function(r, s, px, sx) {
     r.prototype = Object.create(s.prototype);
     r.prototype.constructor = r;
     r.superclass = s.prototype;
@@ -62,7 +64,7 @@
   // child constructor
   function Programmer(){}
   
-  Yextend(Programmer, // the object to modify
+  Y.extend(Programmer, // the object to modify
     Person, // the object to inherit
     {foo: true}, // prototype properties to add/override
     {limit: "sky"} // static properties to add/override
