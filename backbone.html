@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Backbone.js und Backbone.Model.extend</title>
+</head>
+<body>
+<h1>Backbone.js und Backbone.Model.extend</h1>
+<script src="libs/underscore.js"></script>
+<script src="libs/backbone.js"></script>
+<script src="libs/io.js"></script>
+<script>
+var FooModel = Backbone.Model.extend({
+  f: function() {
+    return "instance foo";
+  }
+}, {
+  f: function() {
+    return "static foo"
+  }
+});
+
+var BarModel = FooModel.extend({
+  f: function() {
+    return "instance bar"
+  }
+}, {
+  f: function() {
+    return "static bar"
+  }
+});
+
+var foo = new FooModel();
+var bar = new BarModel();
+println(foo.f());
+println(bar.f());
+println(FooModel.f());
+println(BarModel.f());
+</script>
+</body>
+</html>
