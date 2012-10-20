@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery und $.extend</title>
+</head>
+<body>
+<h1>jQuery und $.extend</h1>
+<p>Keep in mind that the target object (first argument) will be modified!</p>
+<script src="libs/jquery.js"></script>
+<script src="libs/io.js"></script>
+
+<script>
+var person = {name: 'Malte'};
+var contact = {mail: 'm@mlte.de'};
+var data = {age: 23, sex: 'male'};
+// extend person with concat and data
+$.extend(person, contact, data);
+printObject(person);
+println("---");
+
+// shallow copy
+var p = {name: 'Bjoern'};
+var q = {options: {note: "Hello"}, ids: [1]};
+$.extend(p,q);
+p.options.note = "Good Bye";
+p.ids.push(3);
+printObject(q);
+printObject(p);
+println("---");
+
+// deep copy
+p = {name: 'Bjoern'};
+q = {options: {note: "Hello"}, ids: [1]};
+$.extend(true, p,q);
+p.options.note = "Good Bye";
+p.ids.push(3);
+printObject(q);
+printObject(p);
+</script>
+</body>
+</html>

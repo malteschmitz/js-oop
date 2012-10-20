@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery und $.extend (selfmade)</title>
+</head>
+<body>
+<h1>jQuery und $.extend (selfmade)</h1>
+<p>Keep in mind that the target object (first argument) will be modified!</p>
+<script src="libs/io.js"></script>
+
+<script>
+var jQuery = {}, $=jQuery;
+
+// see MDN reference on the typeof operator to see why it is useless
+// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/typeof
+
+(function() {
+  var class2type = [];
+  var types = ["Boolean", "Number", "String", "Function",
+    "Array", "Date", "RegExp", "Object"];
+  for (var i = 0; i < types.length; i++) {
+    class2type[ "[object " + types[i] + "]" ] = types[i].toLowerCase();
+  }
+  jQuery.type = function( obj ) {
+		return obj == null ?
+			String( obj ) :
+			class2type[ Object.prototype.toString.call(obj) ] || "object";
+  };
+}());
+
+// isPlainObject checks whether an object was created using an object literal
+// or new Object. This version leaves out some hacks to satisfy IE8 and 9.
+
+jQuery.isPlainObject = function( obj ) {
+	// Must be an Object.
+	// Because of IE, we also have to check the presence of the constructor property.
+	// Make sure that DOM nodes and window objects don't pass through, as well
+	if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || obj == obj.window ) {
+		return false;
+	}
+
+	// Not own constructor property must be Object
+	if ( obj.constructor &&
+		!Object.prototype.hasOwnProperty.call(obj, "constructor") &&
+		!Object.prototype.hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf") ) {
+		return false;
+	}
+
+	// Own properties are enumerated firstly, so to speed up,
+	// if last one is own, then all properties are own.
+
+	var key;
+	for ( key in obj ) {}
+
+	return key === undefined || Object.prototype.hasOwnProperty.call( obj, key );
+};
+
+// Skipped in this version
+// - avoiding of endless loops while deep copying objects referring to themselfs
+// - handle non-object targets, which may appear in deep copying
+// - handling of arrays
+
+jQuery.extend = function() {
+	var options, name, src, copy, copyIsArray, clone,
+		target = arguments[0] || {},
+		i = 1,
+		length = arguments.length,
+		deep = false;
+
+	// Handle a deep copy situation
+	if ( typeof target === "boolean" ) {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	}
+
+	for ( ; i < length; i++ ) {
+		// Only deal with non-null/undefined values
+		if ( (options = arguments[ i ]) != null ) {
+			// Extend the base object
+			for ( name in options ) {
+				src = target[ name ];
+				copy = options[ name ];
+
+				// Recurse if we're merging plain objects
+				if ( deep && copy && jQuery.isPlainObject(copy) ) {
+				  clone = jQuery.isPlainObject(src) ? src : {};
+					target[ name ] = jQuery.extend( deep, clone, copy );
+
+				// Don't bring in undefined values
+				} else if ( copy !== undefined ) {
+					target[ name ] = copy;
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
+var person = {name: 'Malte'};
+var contact = {mail: 'm@mlte.de'};
+var data = {age: 23, sex: 'male'};
+// extend person with concat and data
+$.extend(person, contact, data);
+printObject(person);
+println("---");
+
+// shallow copy
+var p = {name: 'Bjoern'};
+var q = {options: {note: "Hello"}};
+$.extend(p,q);
+p.options.note = "Good Bye";
+printObject(q);
+printObject(p);
+println("---");
+
+// deep copy
+p = {name: 'Bjoern'};
+q = {options: {note: "Hello"}};
+$.extend(true, p,q);
+p.options.note = "Good Bye";
+printObject(q);
+printObject(p);
+</script>
+</body>
+</html>
