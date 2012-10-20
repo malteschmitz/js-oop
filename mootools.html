@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MooTools und new Class</title>
+</head>
+<body>
+<h1>MooTools und new Class</h1>
+<script src="libs/io.js"></script>
+<script src="libs/mootools.js"></script>
+<script>
+// Extends uses real inhertiance
+var Animal = new Class({
+    initialize: function(age){
+        this.age = age;
+    }
+});
+var Cat = new Class({
+    Extends: Animal,
+    initialize: function(name, age){
+        this.parent(age); // calls initalize method of Animal class
+        this.name = name;
+    }
+});
+var myCat = new Cat('Micia', 20);
+println(myCat.name); // Micia
+println(myCat.age); // 20
+Animal.prototype.foo = function() {return "42"};
+println(myCat.foo()); // 42
+
+// Implements uses copy-inheritance
+Animal = new Class({
+    initialize: function(age){
+        this.age = age;
+    }
+});
+Cat = new Class({
+    Implements: Animal,
+    setName: function(name){
+        this.name = name
+    }
+});
+var myAnimal = new Cat(20);
+myAnimal.setName('Micia');
+println(myAnimal.name); // Micia
+Animal.prototype.foo = function() {return "42"};
+println(myAnimal.foo); // undefined
+
+// use implement to add instance properties to a class
+Cat.implement({bar: function() { return "23" }});
+// same as
+// Cat.prototype.bar = function() { return "23" };
+println(myAnimal.bar()); // 23
+</script>
+</body>
+</html>

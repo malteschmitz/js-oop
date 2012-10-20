@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MooTools und new Class</title>
+</head>
+<body>
+<h1>MooTools und new Class</h1>
+<script src="libs/io.js"></script>
+<script>
+Function.prototype.overloadSetter = function(){
+	var self = this;
+	return function(a, b){
+		if (a == null) return this;
+		if (typeof a != 'string'){
+			for (var k in a) self.call(this, k, a[k]);
+		} else {
+			self.call(this, a, b);
+		}
+		return this;
+	};
+};
+
+Function.prototype.extend = function(key, value){
+	this[key] = value;
+}.overloadSetter();
+
+Function.prototype.implement = function(key, value){
+	this.prototype[key] = value;
+}.overloadSetter();
+
+
+
+
+// This version of reset completely leaves out the handling of arrays.
+// In the original version arrays get cloned, but we don't implement
+// deep cloning of arrays here.
+var reset = function(object){
+	for (var key in object){
+		var value = object[key];
+		// This version assumes that value is not an array. 
+		if (typeof value === 'object') {
+      var F = function(){};
+			F.prototype = value;
+			object[key] = reset(new F);
+			// same as object[key] = reset(Object.create(value));
+    }
+	}
+	return object;
+};
+
+var parent = function(){
+	if (!this.$caller) throw new Error('The method "parent" cannot be called.');
+	var name = this.$caller.$name,
+		parent = this.$caller.$owner.parent,
+		previous = (parent) ? parent.prototype[name] : null;
+	if (!previous) throw new Error('The method "' + name + '" has no parent.');
+	return previous.apply(this, arguments);
+};
+
+var wrap = function(self, key, method){
+	if (method.$origin) method = method.$origin;
+	var wrapper = function(){
+		if (method.$protected && this.$caller == null) throw new Error('The method "' + key + '" cannot be called.');
+		var caller = this.caller, current = this.$caller;
+		this.caller = current; this.$caller = wrapper;
+		var result = method.apply(this, arguments);
+		this.$caller = current; this.caller = caller;
+		return result;
+	}.extend({$owner: self, $origin: method, $name: key});
+	return wrapper;
+};
+
+var implement = function(key, value, retain){
+	if (Class.Mutators.hasOwnProperty(key)){
+		value = Class.Mutators[key].call(this, value);
+		if (value == null) return this;
+	}
+
+	if (typeof value === 'function'){
+		if (value.$hidden) return this;
+		this.prototype[key] = (retain) ? value : wrap(this, key, value);
+	}
+  // handling of non functions is left out in this version
+
+	return this;
+};
+
+var getInstance = function(klass){
+	klass.$prototyping = true;
+	var proto = new klass;
+	delete klass.$prototyping;
+	return proto;
+};
+
+// This version leaves out the type system of MooTools
+var Class = function(params){
+	if (typeof params === 'function') params = {initialize: params};
+
+	var newClass = function(){
+		reset(this);
+		if (newClass.$prototyping) return this;
+		this.$caller = null;
+		var value = (this.initialize) ? this.initialize.apply(this, arguments) : this;
+		this.$caller = this.caller = null;
+		return value;
+	}.extend(this).implement(params);
+  
+	newClass.$constructor = Class;
+	newClass.prototype.$constructor = newClass;
+	newClass.prototype.parent = parent;
+
+	return newClass;
+};
+
+Class.implement('implement', implement.overloadSetter());
+
+Class.Mutators = {
+
+	Extends: function(parent){
+		this.parent = parent;
+		this.prototype = getInstance(parent);
+	},
+
+	Implements: function(items){
+	  if (!items.length) {
+      items = [items];
+    }
+    for (var i = 0; i < items.length; i++) {
+      var instance = new items[i];
+      for (var key in instance) implement.call(this, key, instance[key], true);
+    }
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
+// Extends uses real inhertiance
+var Animal = new Class({
+    initialize: function(age){
+        this.age = age;
+    }
+});
+var Cat = new Class({
+    Extends: Animal,
+    initialize: function(name, age){
+        this.parent(age); // calls initalize method of Animal class
+        this.name = name;
+    }
+});
+var myCat = new Cat('Micia', 20);
+println(myCat.name); // Micia
+println(myCat.age); // 20
+Animal.prototype.foo = function() {return "42"};
+println(myCat.foo()); // 42
+
+// Implements uses copy-inheritance
+Animal = new Class({
+    initialize: function(age){
+        this.age = age;
+    }
+});
+Cat = new Class({
+    Implements: Animal,
+    setName: function(name){
+        this.name = name
+    }
+});
+var myAnimal = new Cat(20);
+myAnimal.setName('Micia');
+println(myAnimal.name); // Micia
+Animal.prototype.foo = function() {return "42"};
+println(myAnimal.foo); // undefined
+
+// use implement to add instance properties to a class
+Cat.implement({bar: function() { return "23" }});
+// same as
+// Cat.prototype.bar = function() { return "23" };
+println(myAnimal.bar()); // 23
+</script>
+<p>Leaves out type system and array handling.</p>
+<p>TODO: Leaves out parent and wrap.</p>
+</body>
+</html>
