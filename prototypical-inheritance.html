@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>prototypical inheritance</h1>
-<pre>
+<script src="libs/io.js"></script>
 <script>
   if (typeof Object.create !== 'function') {
     Object.create = function(o) {
@@ -65,11 +65,10 @@
   });
   
   var g = gizmo(5);
-  document.writeln(g);
+  println(g);
   var h = hoozit(6);
-  document.writeln(h);
-  document.writeln(h.test(6));
+  println(h);
+  println(h.test(6));
 </script>
-</pre>
 </body>
 </html>

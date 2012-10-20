@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>extends operator for prototypical inheritance</h1>
-<pre>
+<script src="libs/io.js"></script>
 <script>
 var a = {
   foo: 12
@@ -25,21 +25,20 @@ var ext = function(o) {
 var b = ext(a);
 b.bar = 13;
 
-document.writeln('b.bar: ' + b.bar); // 13
-document.writeln('b.foo: ' + b.foo); // 12
+println('b.bar: ' + b.bar); // 13
+println('b.foo: ' + b.foo); // 12
 
 // Every object literal inherits from Object.prototype and we can modify
 // this prototype and add attributes on it.
 
 Object.prototype.c = 14;
 
-document.writeln('a.c: ' + a.c); // 14
-document.writeln('b.c: ' + b.c); // 14
+println('a.c: ' + a.c); // 14
+println('b.c: ' + b.c); // 14
 b.c = -1; // set c property of b and hide inherited property c of a which
           // inherits the a from Object.prototype
-document.writeln('a.c: ' + a.c); // 14
-document.writeln('b.c: ' + b.c); // -1
+println('a.c: ' + a.c); // 14
+println('b.c: ' + b.c); // -1
 </script>
-</pre>
 </body>
 </html>

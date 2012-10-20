@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>functional inheritance</h1>
-<pre>
+<script src="libs/io.js"></script>
 <script>
 function gizmo(id) {
   return {
@@ -25,10 +25,9 @@ function hoozit(id) {
 
 var g = gizmo(5);
 var h = hoozit(6);
-document.writeln(g);
-document.writeln(h);
-document.writeln(h.test(6));
+println(g);
+println(h);
+println(h.test(6));
 </script>
-</pre>
 </body>
 </html>

@@ -7,13 +7,14 @@
 <body>
 <h1>Mootools overloadSetter</h1>
 <script src="libs/mootools.js"></script>
-<pre><script>
+<script src="libs/io.js"></script>
+<script>
 var fnOrig = function(key, value) {
-  document.writeln(key + ': ' + value);
+  println(key + ': ' + value);
 };
 var fnOver = fnOrig.overloadSetter();
 fnOver('fruit', 'banana');
 fnOver({fruit: 'banana', 'vegetable': 'carrot'});
-</script></pre>
+</script>
 </body>
 </html>

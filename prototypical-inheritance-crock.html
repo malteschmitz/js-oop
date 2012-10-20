@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>prototypical inheritance</title>
+<title>prototypical inheritance (by Crockford)</title>
 </head>
 <body>
-<h1>prototypical inheritance</h1>
-<pre>
+<h1>prototypical inheritance (by Crockford)</h1>
+<script src="libs/io.js"></script>
 <script>
   (function() {
     "use strict";
@@ -47,12 +47,11 @@
     });
     
     var g = gizmo(5);
-    document.writeln(g);
+    println(g);
     var h = hoozit(6);
-    document.writeln(h);
-    document.writeln(h.test(6));
+    println(h);
+    println(h.test(6));
   }());
 </script>
-</pre>
 </body>
 </html>

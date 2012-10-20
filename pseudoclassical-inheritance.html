@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>pseudoclassical inheritance</h1>
-<pre>
+<script src="libs/io.js"></script>
 <script>
   var Gizmo = function (id) {
     this.id = id;
@@ -27,14 +27,13 @@
   }
 
   var h = new Hoozit(5);
-  document.writeln(h); // "Gizmo 5"
-  document.writeln(h.test(5)); // true
+  println(h); // "Gizmo 5"
+  println(h.test(5)); // true
   var g = new Gizmo(6);
-  document.writeln(typeof g.test) // undefined
+  println(typeof g.test) // undefined
   
-  document.writeln(h.constructor);
-  document.writeln(g.constructor);
+  println(h.constructor);
+  println(g.constructor);
 </script>
-</pre>
 </body>
 </html>

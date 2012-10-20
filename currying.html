@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>this</title>
+<title>currying</title>
 </head>
 <body>
-<h1>this</h1>
-<pre>
+<h1>currying</h1>
+<script src="libs/io.js"></script>
 <script>
 var curry = function(func) {
   var args = Array.prototype.slice.call(arguments, 1);
@@ -19,8 +19,7 @@ var add = function(a,b) {
   return a + b;
 }
 var inc = curry(add,1);
-document.writeln(inc(6));
+println(inc(6));
 </script>
-</pre>
 </body>
 </html>

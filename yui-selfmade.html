@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>YUI and Y.extend (selfmade)</h1>
-<pre>
+<script src="libs/io.js"></script>
 <script>
   if (typeof Object.create !== 'function') {
     Object.create = function(o) {
@@ -72,24 +72,23 @@
   
   var guru = new Programmer();
   
-  document.writeln(typeof guru.getName);
+  println(typeof guru.getName);
   
   // foo is now a property of the child's prototype
-  document.writeln(typeof Programmer.prototype.foo); // "boolean"
+  println(typeof Programmer.prototype.foo); // "boolean"
   
   // the property works for all new objects
   var bob = new Programmer();
-  document.writeln(bob.foo); // true
+  println(bob.foo); // true
   
   // adding to the constructor is more for 
   // "static" properties meant to act as constants
-  document.writeln(Programmer.limit); // "sky"
-  document.writeln(bob.limit); // undefined
+  println(Programmer.limit); // "sky"
+  println(bob.limit); // undefined
   
-  document.writeln(bob.constructor === Programmer); // true
-  document.writeln(bob.constructor.superclass === Person.prototype); // true
-  document.writeln(bob.constructor.superclass.constructor === Person); // true
+  println(bob.constructor === Programmer); // true
+  println(bob.constructor.superclass === Person.prototype); // true
+  println(bob.constructor.superclass.constructor === Person); // true
 </script>
-</pre>
 </body>
 </html>

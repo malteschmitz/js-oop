@@ -6,7 +6,9 @@
 </head>
 <body>
 <h1>Underscore.js und _.extend (selfmade)</h1>
-<pre><script>
+<p>Keep in mind that the target object (first argument) will be modified!</p>
+<script src="libs/io.js"></script>
+<script>
 var _ = {};
 _.extend = function(obj) {
   var sources = Array.prototype.slice.call(arguments, 1);
@@ -24,9 +26,7 @@ var contact = {mail: 'm@mlte.de'};
 var data = {age: 23, sex: 'male'};
 // extend person with concat and data
 _.extend(person, contact, data);
-for (var prop in person) {
-  document.writeln(prop + ': ' + person[prop]);
-}
-</script></pre>
+printObject(person);
+</script>
 </body>
 </html>
