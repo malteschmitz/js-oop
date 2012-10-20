@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>YUI and Y.extend</h1>
-<pre id="pre"></pre>
+<script src="libs/io.js"></script>
 <script src="libs/yui/yui.js"></script>
 <script src="libs/yui/oop.js"></script>
 <script>
@@ -36,29 +36,25 @@ YUI().use('oop', function(Y){
   
   var guru = new Programmer();
   
-  var pre = document.getElementById('pre');
-  var writeln = function(s) {
-    pre.innerHTML = pre.innerHTML + s + '\n';
-  };
-  writeln(typeof guru.getName);
+  println(typeof guru.getName);
   
   // foo is now a property of the child's prototype
-  writeln(typeof Programmer.prototype.foo); // "boolean"
+  println(typeof Programmer.prototype.foo); // "boolean"
   
   // the property works for all new objects
   var bob = new Programmer();
-  writeln(bob.foo); // true
+  println(bob.foo); // true
   
   // adding to the constructor is more for 
   // "static" properties meant to act as constants
-  writeln(Programmer.limit); // "sky"
-  writeln(bob.limit); // undefined
+  println(Programmer.limit); // "sky"
+  println(bob.limit); // undefined
   
-  writeln(bob.constructor === Programmer); // true
-  writeln(bob.constructor.superclass === Person.prototype); // true
-  writeln(bob.constructor.superclass.constructor === Person); // true
+  println(bob.constructor === Programmer); // true
+  println(bob.constructor.superclass === Person.prototype); // true
+  println(bob.constructor.superclass.constructor === Person); // true
   
-  writeln('----------------------');
+  println('----------------------');
   
   // prototypical inheritance
   // ------------------------
@@ -81,7 +77,7 @@ YUI().use('oop', function(Y){
   batman.name = "Bruce";
   
   // use
-  writeln(batman.say()); // I am Bruce Wayne
+  println(batman.say()); // I am Bruce Wayne
 });
 </script>
 </body>
