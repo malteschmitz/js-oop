@@ -15,8 +15,8 @@
   language=JavaScript,
   basicstyle=\ttfamily,%
   keywordstyle=\bfseries\color{yellow!70!black},%
-  ndkeywordstyle=\color{blue!70!black},%
-  stringstyle=\color{green!50!black},%
+  ndkeywordstyle=\color{blue!70!white},%
+  stringstyle=\color{green!80!black},%
   commentstyle=\itshape\color{white!70!black},%
   showstringspaces=false,%
   upquote=true}
@@ -87,10 +87,45 @@
 
 \subsection{Objekte}
 
+\begin{frame}[fragile]{Variablen}
+  \begin{itemize}
+    \item dynamische Typisierung, \emph{nicht} ungetypt
+    \item statische (lexikalische) Bindung
+    \item Sichtbarkeitsbereich: ganze aktuelle Funktion
+  \end{itemize}
+  
+  \begin{lstlisting}[gobble=4]
+    var a; // Deklaration
+    console.log(a); // --> undefined
+    
+    a = 42; // Initialisierung
+    console.log(a); // --> 42
+    
+    // b ist hier bereits deklariert,
+    // aber nicht initialisiert
+    console.log(b); // --> undefined
+    var b = 23; // Deklaration und Initialisierung
+  \end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]{Kontrollstrukturen}
+  \begin{lstlisting}[gobble=4]
+    var x = 13;
+    while (x < 15) {
+      console.log(x); // --> 13, 14
+      x += 1;
+    }
+    if (x >= 15) {
+      console.log(x); // --> 15
+    }
+  \end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]{Objekte}
   \begin{itemize}
     \item \emph{keine} Instanz einer Klasse
     \item dynamische Sammlung von Eigenschaften (Hash, Map, \ldots)
+    \item alles ist ein Objekt
   \end{itemize}
     
   \begin{lstlisting}[gobble=4]
@@ -101,11 +136,56 @@
     o.foo = 42;
     
     // Eigenschaft auslesen
-    console.log(o.foo);
+    console.log(o.foo); // --> 42
     
     // Eigenschaft löschen
     delete o.foo;
   \end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]{Objektliterale}
+  \begin{lstlisting}[gobble=4]
+    var meta = {
+      author: "Malte Schmitz",
+      date: new Date(2012, 10, 16),
+      event: "MetaNook"
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{\&\&} und \texttt{||}}
+  \begin{lstlisting}[gobble=4]
+    // guard operator
+    var author = meta && meta.author;
+    
+    // default operator
+    var obj = meta || {};
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Iteration über Objekteigenschaften}
+  \begin{lstlisting}[gobble=4]
+    for (var key in meta) {
+      var value = meta[key];
+      console.log(key + ': ' + value);
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{globale Variablen}
+  \begin{itemize}
+    \item Eigenschaften des globalen Objektes
+  \end{itemize}
+  
+  \begin{lstlisting}[gobble=4]
+    this
+    window
+    window.window
+  
+    foo = 12;
+    // entspricht
+    windows.foo = 12;
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -115,18 +195,45 @@
 \subsection{Funktionen}
 
 \begin{frame}
-  no content
+  Closures! --> Currying
+  virtuelle Parameter
+\end{frame}
+
+\begin{frame}[fragile]{Currying}
+  \begin{onlyenv}<1>
+    \begin{lstlisting}[gobble=6]
+      var add = function(a,b) {
+        return a + b;
+      }
+      var inc = curry(add,1);
+      console.log(inc(6)); // --> 7
+    \end{lstlisting}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2>
+    \begin{lstlisting}[gobble=6]
+      var curry = function(func) {
+        var fixed = makeArray(arguments).slice(1);
+        return function() {
+          var args = makeArray(arguments);
+          return func.apply(null, fixed.concat(args));
+        }
+      }
+    \end{lstlisting}
+  \end{onlyenv}
 \end{frame}
 
 \subsection{Funktionsaufrufe}
 
 \begin{frame}
+  call-by-reference, aber primitive Datentypen sind imutable
   no content
 \end{frame}
 
 \subsection{Vererbung}
 
 \begin{frame}
+  hasOwnProperty
   no content
 \end{frame}
 
@@ -162,40 +269,100 @@
   no content
 \end{frame}
 
-\subsection{Underscore.js und \_.extend}
+\subsection{Underscore.js und \texttt{\_.extend}}
 
 \begin{frame}
   no content
 \end{frame}
 
-\subsection{jQuery und \$.extend}
+\subsection{jQuery und \texttt{\$.extend}}
 
 \begin{frame}
   no content
 \end{frame}
 
-\subsection{YUI und Y.extend}
+\subsection{YUI und \texttt{Y.extend}}
 
 \begin{frame}
   no content
 \end{frame}
 
-\subsection{Backbone.js und Backbone.Model.extend}
+\subsection{Backbone.js und \texttt{Backbone.Model.extend}}
 
 \begin{frame}
   no content
 \end{frame}
 
-\subsection{MooTools und new Class}
+\subsection{MooTools und \texttt{new Class}}
 
 \begin{frame}
   no content
 \end{frame}
 
-\subsection{Prototype und Class.create}
+\subsection{Prototype und \texttt{Class.create}}
 
 \begin{frame}
   no content
+\end{frame}
+
+\section*{Zusammenfassung}
+
+\begin{frame}{Zusammenfassung}
+  \begin{itemize}
+    \item \alert{Prototypische/differenzielle Vererbung} ist eine \alert{Verallgemeinerung} der
+      klassenbasierten Verberbung.
+    \item \alert{Klassenbasierte Vererbung} kann in JavaScript \alert{simuliert} werden.
+    \item Es muss zwischen \alert{prototypischer Vererbung} und \alert{Vererbung durch
+      Kopieren} unterschieden werden.
+    \item In der Praxis sucht man sich eines der \alert{vielen Frameworks} für
+      \alert{Objektorientierte Programmierung mit JavaScript}.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Crockford on JavaScript}
+  \begin{thebibliography}{1}
+    \bibitem{1} Volume One:
+    \emph{The Early Years}
+    \newblock 25. Januar 2010
+    
+    \bibitem{2} Chapter 2:
+    \emph{And Then There Was JavaScript}
+    \newblock 5. Februar 2010
+    
+    \bibitem{3} Act III:
+    \emph{Function the Ultimate}
+    \newblock 17. Februar 2010
+    
+    \bibitem{4} Episode IV:
+    \emph{The Metamorphosis of Ajax}
+    \newblock 3. März 2010
+    
+    \bibitem{5} Part 5:
+    \emph{The End of All Things}
+    \newblock 31. März 2010
+    
+    %\bibitem{6} Scene 6:
+    %\emph{Loopage}
+    %\newblock 27. August 2010
+    %
+    %\bibitem{7} Level 7:
+    %\emph{ECMAScript 5: The New Parts}
+    %\newblock 29. März 2011
+    %
+    %\bibitem{8} Section 8:
+    %\emph{Programming Style and Your Brain}
+    %\newblock 3. November 2011
+  \end{thebibliography}
+\end{frame}
+
+\begin{frame}{Bücher}
+  \begin{thebibliography}{1}
+    \bibitem{1} David Flanagan
+    \newblock \emph{JavaScript: The Definitive Guide}
+    
+    \bibitem{2} Douglas Crockford
+    \newblock \emph{JavaScript: The Good Parts}
+  \end{thebibliography}
 \end{frame}
 
 \end{document}
