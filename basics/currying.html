@@ -8,11 +8,15 @@
 <h1>currying</h1>
 <script src="../libs/io.js"></script>
 <script>
+var makeArray = function(a) {
+  return Array.prototype.slice.call(a);
+}
+
 var curry = function(func) {
-  var args = Array.prototype.slice.call(arguments, 1);
+  var fixed = makeArray(arguments).slice(1);
   return function() {
-    return func.apply(null,
-      args.concat(Array.prototype.slice.apply(arguments)));
+    var args = makeArray(arguments);
+    return func.apply(null, fixed.concat(args));
   }
 }
 var add = function(a,b) {
