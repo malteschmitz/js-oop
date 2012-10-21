@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Prototype und Class.create</title>
+</head>
+<body>
+<h1>Prototype und Class.create</h1>
+<script src="libs/prototype.js"></script>
+<script src="libs/io.js"></script>
+<script>
+// properties are directly passed to `create` method
+var Person = Class.create({
+  initialize: function(name) {
+    this.name = name;
+  },
+  say: function(message) {
+    return this.name + ': ' + message;
+  }
+});
+
+// when subclassing, specify the class you want to inherit from
+var Pirate = Class.create(Person, {
+  // redefine the speak method
+  say: function($super, message) {
+    return $super(message) + ', yarr!';
+  }
+});
+
+var john = new Pirate('Long John');
+println(john.say('ahoy matey'));
+</script>
+</body>
+</html>
