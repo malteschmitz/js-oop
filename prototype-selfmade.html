@@ -43,6 +43,7 @@ var Class = (function() {
     if (parent) {
       subclass.prototype = parent.prototype;
       klass.prototype = new subclass;
+      // same as subclass.prototype = Object.create(parent.prototype)
     }
 
     for (var i = 0, length = properties.length; i < length; i++)
