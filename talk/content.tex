@@ -1,0 +1,201 @@
+\usepackage{tikz}
+
+\usepackage{listings}
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{%
+  language=JavaScript,
+  basicstyle=\ttfamily,%
+  keywordstyle=\bfseries\color{yellow!70!black},%
+  ndkeywordstyle=\color{blue!70!black},%
+  stringstyle=\color{green!50!black},%
+  commentstyle=\itshape\color{white!70!black},%
+  showstringspaces=false,%
+  upquote=true}
+% german umlauts
+\lstset{
+  literate={ö}{{\"o}}1
+           {ä}{{\"a}}1
+           {ü}{{\"u}}1
+           {ß}{{\ss}}1
+} 
+
+\title{Objektorientierte Programmierung mit JavaScript}
+
+\author{Malte Schmitz}
+
+\date{16. November 2012}
+
+\begin{document}
+
+\begin{frame}[fragile,plain]
+  \begin{center}
+    \LARGE Objektorientierte Programmierung \\ mit JavaScript 
+  \end{center}
+  
+  \vskip4ex
+  
+  \begin{columns}
+  \column{7.5em}
+  \column{40em}
+  \begin{lstlisting}[gobble=4]
+    var meta = {
+      author: "Malte Schmitz",
+      date: new Date(2012, 10, 16),
+      event: "MetaNook"
+    }
+  \end{lstlisting}
+  \end{columns}
+\end{frame}
+
+\section*{Inhalt}
+
+\begin{frame}{Ziele}
+  \begin{enumerate}
+    \item JavaScript-Objekte und -Funkionen verwenden können
+    \item prototypische (differenzielle) Vererbung verstehen
+    \item Objektorientierte Konzepte in JavaScript kennen lernen
+    \item sehen, wie JavaScript-Frameworks diese umsetzen
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Gliederung}
+  \begin{enumerate}[{Teil} I]
+    \item Einführung in JavaScript
+    \item Objektorientierung mit JavaScript
+    \item Objektorientierung mit JavaScript-Frameworks
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Github}
+  \url{github.com/malteschmitz/js-oop}
+  \begin{itemize}
+    \item diese Präsentation
+    \item alle Beispiele
+  \end{itemize}
+\end{frame}
+
+\section{JavaScript}
+
+\subsection{Objekte}
+
+\begin{frame}[fragile]{Objekte}
+  \begin{itemize}
+    \item \emph{keine} Instanz einer Klasse
+    \item dynamische Sammlung von Eigenschaften (Hash, Map, \ldots)
+  \end{itemize}
+    
+  \begin{lstlisting}[gobble=4]
+    // Objekt erzeugen
+    var o = {};
+    
+    // Eigenschaft setzen
+    o.foo = 42;
+    
+    // Eigenschaft auslesen
+    console.log(o.foo);
+    
+    // Eigenschaft löschen
+    delete o.foo;
+  \end{lstlisting}  
+\end{frame}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Funktionen}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Funktionsaufrufe}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Vererbung}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\section{Objektorientierung}
+
+\subsection{pseudoklassische Vererbung}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{prototypische Vererbung}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{funktionale Vererbung}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Vererbung durch Kopieren}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\section{Frameworks}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Underscore.js und \_.extend}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{jQuery und \$.extend}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{YUI und Y.extend}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Backbone.js und Backbone.Model.extend}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{MooTools und new Class}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\subsection{Prototype und Class.create}
+
+\begin{frame}
+  no content
+\end{frame}
+
+\end{document}

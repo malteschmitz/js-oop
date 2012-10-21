@@ -1,0 +1,63 @@
+\documentclass[xcolor=table]{beamer}
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{courier}
+
+\usepackage[ngerman]{babel}
+\usepackage[german=guillemets]{csquotes}
+
+\useinnertheme{default} % circles, rounded, rectangles
+
+% outer theme
+\makeatletter
+\beamer@compresstrue
+\newif\ifbeamer@theme@subsection
+\beamer@theme@subsectionfalse
+
+\defbeamertemplate*{headline}{miniframes theme}
+{%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \ifbeamer@theme@subsection%
+    \begin{beamercolorbox}[colsep=1.5pt]{middle separation line head}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,%
+      leftskip=.3cm,rightskip=.3cm plus1fil]{subsection in head/foot}
+      \usebeamerfont{subsection in head/foot}\insertsubsectionhead
+    \end{beamercolorbox}%
+  \fi%
+  \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+\makeatother
+\usefonttheme{structurebold}
+\setbeamertemplate{navigation symbols}{} % hide navigation symbols
+\setbeamertemplate{footline}{
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \centering--\,\insertframenumber\,--\vskip1em%
+}
+
+\setbeamercolor*{normal text}{fg=white,bg=black}
+\setbeamercolor*{structure}{fg=white}
+\setbeamercolor{section in head/foot}{fg=white}
+\setbeamercolor*{alerted text}{fg=red}
+\setbeamercolor{page number in head/foot}{fg=white}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \Huge \insertsection
+    
+    \large \vskip1em
+    \tableofcontents[sectionstyle=hide/hide,subsectionstyle=show/show/hide]
+  \end{frame}
+}
+  
+\input{content}

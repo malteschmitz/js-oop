@@ -1,0 +1,28 @@
+\documentclass[handout, xcolor=table]{beamer}
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{pgfpages}
+\pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm, landscape]
+
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{courier}
+
+\usepackage[ngerman]{babel}
+\usepackage[german=guillemets]{csquotes}
+
+\useinnertheme{default} % circles, rounded, rectangles
+\usefonttheme{structurebold}
+\setbeamertemplate{navigation symbols}{} % hide navigation symbols
+\setbeamertemplate{footline}{
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \centering--\,\insertframenumber\,--\vskip1em%
+}
+\setbeamertemplate{sections/subsections in toc}[sections numbered]
+
+\setbeamercolor{page number in head/foot}{fg=black}
+  
+\input{content}
