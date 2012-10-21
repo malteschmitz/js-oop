@@ -12,37 +12,16 @@
 /* Based on Alex Arnell's inheritance implementation. */
 var Class = (function() {
 
-  function extend(destination, source) {
-    for (var property in source)
-      destination[property] = source[property];
-    return destination;
-  }
-  
-  function keys(object) {
-    var results = [];
-    for (var property in object) {
-      if (object.hasOwnProperty(property)) {
-        results.push(property);
+  function copyProperties(from,to) {
+    for (var key in from) {
+      if (Object.prototype.hasOwnProperty.call(from, key)) {
+        to[key] = from[key];
       }
     }
-    return results;
   }
   
-  function update(array, args) {
-    var arrayLength = array.length, length = args.length;
-    while (length--) array[arrayLength + length] = args[length];
-    return array;
-  }
-  
-  function wrap(__method, wrapper) {
-    return function() {
-      var a = update([__method.bind(this)], arguments);
-      return wrapper.apply(this, a);
-    }
-  }
-  
-  function argumentNames(__method) {
-    var names = __method.toString().match(/^[\s\(]*function[^(]*\(([^)]*)\)/)[1]
+  function argumentNames(f) {
+    var names = f.toString().match(/^[\s\(]*function[^(]*\(([^)]*)\)/)[1]
       .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
       .replace(/\s+/g, '').split(',');
     return names.length == 1 && !names[0] ? [] : names;
@@ -58,14 +37,12 @@ var Class = (function() {
       this.initialize.apply(this, arguments);
     }
 
-    extend(klass, Class.Methods);
+    copyProperties(Class.Methods, klass);
     klass.superclass = parent;
-    klass.subclasses = [];
 
     if (parent) {
       subclass.prototype = parent.prototype;
       klass.prototype = new subclass;
-      parent.subclasses.push(klass);
     }
 
     for (var i = 0, length = properties.length; i < length; i++)
@@ -79,21 +56,19 @@ var Class = (function() {
   }
 
   function addMethods(source) {
-    var ancestor   = this.superclass && this.superclass.prototype,
-        properties = keys(source);
+    var ancestor = this.superclass && this.superclass.prototype;
 
-    for (var i = 0, length = properties.length; i < length; i++) {
-      var property = properties[i], value = source[property];
+    for (var property in source) {
+      var value = source[property];
       if (ancestor && typeof value === 'function' &&
-          argumentNames(value)[0] == "$super") {
-        var method = value;
-        value = (function(m) {
-          return function() { return ancestor[m].apply(this, arguments); };
-        })(property);
-        value = wrap(value, method);
-
-        //value.valueOf = method.valueOf.bind(method);
-        //value.toString = method.toString.bind(method);
+          argumentNames(value)[0] === "$super") {
+        value = (function(p,v) {
+          var old = function() { return ancestor[p].apply(this, arguments); };
+          return function() {
+            var a = [old.bind(this)].concat(arguments);
+            return v.apply(this, a);
+          };
+        })(property, value);
       }
       this.prototype[property] = value;
     }

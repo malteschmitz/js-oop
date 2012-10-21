@@ -17,11 +17,9 @@
   }
   
   function copyProperties(from,to) {
-    if (typeof from === 'object' && typeof to === 'object') {
-      for (var key in from) {
-        if (Object.prototype.hasOwnProperty.call(from, key)) {
-          to[key] = from[key];
-        }
+    for (var key in from) {
+      if (Object.prototype.hasOwnProperty.call(from, key)) {
+        to[key] = from[key];
       }
     }
   }
