@@ -58,9 +58,9 @@ var Class = function(params){
 
 	var newClass = function(){
 		reset(this);
-		if (newClass.$prototyping) return this;
-		var value = (this.initialize) ? this.initialize.apply(this, arguments) : this;
-		return value;
+		if (this.initialize) {
+      return this.initialize.apply(this, arguments);
+    }
 	}
   copyProperties(this,newClass);
   implementProperties(params,newClass);
@@ -71,9 +71,7 @@ var Class = function(params){
 Class.Mutators = {
 
 	Extends: function(parent){
-	  parent.$prototyping = true;
-		this.prototype = new parent;
-		delete parent.$prototyping;
+		this.prototype = Object.create(parent.prototype);
 	},
 
 	Implements: function(items){
