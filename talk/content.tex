@@ -153,6 +153,15 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{Iteration über Objekteigenschaften}
+  \begin{lstlisting}[gobble=4]
+    for (var key in meta) {
+      var value = meta[key];
+      console.log(key + ': ' + value);
+    }
+  \end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]{\texttt{\&\&} und \texttt{||}}
   \begin{lstlisting}[gobble=4]
     // guard operator
@@ -163,11 +172,19 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Iteration über Objekteigenschaften}
+\begin{frame}[fragile]{Duck-Typing}
+  \begin{quotation}
+    When I see a bird that walks like a duck and swims like a duck and
+    quacks like a duck, I call that bird a duck.
+    
+    \raggedleft -- James Whitcomb Riley
+  \end{quotation}
+  
+  \vskip5ex
+  
   \begin{lstlisting}[gobble=4]
-    for (var key in meta) {
-      var value = meta[key];
-      console.log(key + ': ' + value);
+    if (meta.author) {
+      console.log(meta.author);
     }
   \end{lstlisting}
 \end{frame}
@@ -185,6 +202,24 @@
     foo = 12;
     // entspricht
     windows.foo = 12;
+  \end{lstlisting}
+\end{frame}
+
+\subsection{Vererbung}
+
+\begin{frame}[fragile]{differenzielle Vererbung}
+  \begin{itemize}
+    \item versteckter Link (\lstinline-__proto__-) zum Prototypen
+    \item beim Lesen Rückgriff auf Prototypen  
+  \end{itemize}
+  
+  ANIMATION ZUM BEISPIEL
+  
+  \begin{lstlisting}[gobble=4]
+    var meta = { author: "Malte" };
+    var talk = Object.create(meta);
+    talk.author = "Schmitz";
+    delete talk.author;
   \end{lstlisting}
 \end{frame}
 
@@ -227,14 +262,27 @@
 
 \begin{frame}
   call-by-reference, aber primitive Datentypen sind imutable
-  no content
+  virtuelle Parameter
+  prototype
 \end{frame}
 
-\subsection{Vererbung}
+\begin{frame}[fragile]{\lstinline-arguments-}
+  \begin{lstlisting}[gobble=4]
+    var makeArray = function(a) {
+      return Array.prototype.slice.call(a);
+    }
+  \end{lstlisting}  
+\end{frame}
 
-\begin{frame}
-  hasOwnProperty
-  no content
+\begin{frame}[fragile]{Iteration über Objekteigenschaften}
+  \begin{lstlisting}[gobble=4]
+    for (var key in meta) {
+      if (Object.prototype.hasOwnProperty.apply(key)) {
+        var value = meta[key];
+        console.log(key + ': ' + value);
+      }
+    }
+  \end{lstlisting}
 \end{frame}
 
 \section{Objektorientierung}
