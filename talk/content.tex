@@ -1,4 +1,5 @@
 \usepackage{tikz}
+\usetikzlibrary{shapes.multipart,positioning}
 
 \usepackage{listings}
 \lstdefinelanguage{JavaScript}{
@@ -14,9 +15,9 @@
 \lstset{%
   language=JavaScript,
   basicstyle=\ttfamily,%
-  keywordstyle=\bfseries\color{yellow!70!black},%
-  ndkeywordstyle=\color{blue!70!white},%
-  stringstyle=\color{green!80!black},%
+  keywordstyle=\bfseries\color{yellow!80!black},%
+  ndkeywordstyle=\color{blue!50!white},%
+  stringstyle=\color{green},%
   commentstyle=\itshape\color{white!70!black},%
   showstringspaces=false,%
   upquote=true}
@@ -207,31 +208,80 @@
 
 \subsection{Vererbung}
 
-\begin{frame}[fragile]{differenzielle Vererbung}
+\begin{frame}{differenzielle Vererbung}
   \begin{itemize}
-    \item versteckter Link (\lstinline-__proto__-) zum Prototypen
-    \item beim Lesen Rückgriff auf Prototypen  
+    \item versteckter Link zum Prototypen
+    \item beim Lesen Rückgriff auf Prototypen
+    \item alle Objekte erben von \lstinline-Object.prototype-  
   \end{itemize}
+\end{frame}  
   
-  ANIMATION ZUM BEISPIEL
+\begin{frame}[fragile]{differenzielle Vererbung}
+  \begin{tikzpicture}[shorten >=1pt]
+    \uncover<4->{
+      \node[inner sep=0pt] (talk) {
+        \begin{tabular}{|l|l|}
+          \hline
+          proto & \\ \hline
+          \uncover<6-7>{\lstinline-name-} & \uncover<6-7>{\lstinline-Schmitz-} \\ \hline 
+        \end{tabular}
+      };
+      \node[anchor=south west,inner sep=1pt] at (talk.north west) {\lstinline-talk-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (talk.center) (talk dot) {};
+    }
+    \uncover<2->{
+      \node[inner sep=0pt,node distance=1em,right=of talk] (meta) {
+        \begin{tabular}{|l|l|}
+          \hline
+          proto & \\ \hline
+          \lstinline-name- & \lstinline-Malte- \\ \hline 
+        \end{tabular}
+      };
+      \node[anchor=south west,inner sep=1pt] at (meta.north west) {\lstinline-meta-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (meta.center) (meta dot) {};
+      \node[right=of meta dot] (obj) {\lstinline-Object.prototype-};
+    }
+    \only<4->{\draw[->] (talk dot) edge (meta.west |- talk dot);}
+    \only<2->{\draw[->] (meta dot) edge (obj);}
+  \end{tikzpicture}
   
-  \begin{lstlisting}[gobble=4]
-    var meta = { author: "Malte" };
-    var talk = Object.create(meta);
-    talk.author = "Schmitz";
-    delete talk.author;
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}
-  no content
+  \vskip3ex
+  
+  \uncover<1->{\lstinline-var meta = \{author: "Malte"\};-}\\
+  \uncover<3->{\lstinline-var talk = Object.create(meta);-}\\
+  \uncover<5->{\lstinline-talk.author = "Schmitz";-}\\
+  \uncover<7->{\lstinline-delete talk.author;-}
+  
+  \vskip3ex
+  
+  \begin{overprint}
+    \only<1-3,5,7>{\quad}
+    \only<4>{\lstinline|console.log(talk.author); // --> Malte|}
+    \only<6>{\lstinline|console.log(talk.author); // --> Schmitz|}
+    \only<8>{\lstinline|console.log(talk.author); // --> Malte|}
+  \end{overprint}
 \end{frame}
 
 \subsection{Funktionen}
 
-\begin{frame}
-  Closures! --> Currying
-  virtuelle Parameter
+\begin{frame}[fragile]{Funktionen}
+  \begin{lstlisting}[gobble=4]
+    var square = function(x) {
+      return x * x;
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Funktionen}
+  \begin{lstlisting}[gobble=4]
+    var sum = function() {
+      var s = 0, i = 0;
+      for (;i < arguments.length; i++) {
+        s += arguments[i];
+      }
+      return s;
+    }
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Currying}
@@ -260,22 +310,48 @@
 
 \subsection{Funktionsaufrufe}
 
-\begin{frame}
-  call-by-reference, aber primitive Datentypen sind imutable
-  virtuelle Parameter
-  prototype
+\begin{frame}{Funktionsaufrufe}
+  \begin{tabular}{ll}
+    Aufruf & \lstinline-this- \\ \hline
+    \lstinline-sum()- & globales Object \\
+    \lstinline-obj.sum()- & \lstinline-obj- \\
+    \lstinline-sum.apply(foo)- & \lstinline-foo- \\
+    \lstinline-new sum()- & neues Object
+  \end{tabular}
 \end{frame}
 
-\begin{frame}[fragile]{\lstinline-arguments-}
+\begin{frame}[fragile]{Funktionsaufrufe}
   \begin{lstlisting}[gobble=4]
-    var makeArray = function(a) {
-      return Array.prototype.slice.call(a);
+    sum(1,2,3);
+    sum.apply(window, [1, 2, 3]);
+    sum.call(window, 1, 2, 3);
+    
+    
+    meta.add = sum;
+    
+    meta.add(1,2,3);
+    sum.apply(meta, [1, 2, 3]);
+    sum.call(meta, 1, 2, 3);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\lstinline-new--Operator}
+  \begin{lstlisting}[gobble=4]
+    var a = new Fun(42);
+  
+  
+    var a = Object.create(Fun.prototype);
+    a.constructor = Fun;
+    var res = Fun.call(a, 42);
+    if (res && (typeof res === 'object' ||
+                typeof res === 'function')) {
+      a = res;
     }
-  \end{lstlisting}  
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Iteration über Objekteigenschaften}
-  \begin{lstlisting}[gobble=4]
+  \begin{lstlisting}[gobble=4,basicstyle=\small\ttfamily]
     for (var key in meta) {
       if (Object.prototype.hasOwnProperty.apply(key)) {
         var value = meta[key];
@@ -283,6 +359,26 @@
       }
     }
   \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\lstinline-makeArray-}
+  \begin{lstlisting}[gobble=4]
+    var makeArray = function(a) {
+      return Array.prototype.slice.call(a);
+    }
+  \end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]{\lstinline-Object.create-}
+  \begin{lstlisting}[gobble=4]
+    if (typeof Object.create !== 'function') {
+      Object.create = function(obj) {
+        var F = function(){};
+        F.prototype = obj;
+        return new F();
+      }
+    }
+  \end{lstlisting}  
 \end{frame}
 
 \section{Objektorientierung}
