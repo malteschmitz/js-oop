@@ -80,23 +80,23 @@ Gliederung
    - direkt-kopierende Vererbung (Kopie)
    - pseudoklassische Vererbung (Verweis)
    - prototypische Vererbung (Verweis)
-  ´- funktionale Vererbung (Kopie)
+   - funktionale Vererbung (Kopie)
      - private Attribute
      - geschützte Attribute
      - öffentliche Attribute
    - Vererbung durch Kopieren
 3. Objektorientierung mit JavaScript-Frameworks
-   - Underscore.js und _.extend
+   - Underscore.js und _.extend  
      http://underscorejs.org/#extend
-   - jQuery und $.extend
+   - jQuery und $.extend  
      http://api.jquery.com/jQuery.extend/
-   - YUI und Y.extend
+   - YUI und Y.extend  
      http://www.yuiblog.com/blog/2010/01/06/inheritance-patterns-in-yui-3/
-   - Backbone.js und Backbone.Model.extend
+   - Backbone.js und Backbone.Model.extend  
      http://backbonejs.org/#Model-extend
-   - MooTools und new Class
+   - MooTools und new Class  
      http://mootools.net/docs/core/Class/Class
-   - Prototype und Class.create
+   - Prototype und Class.create  
      http://prototypejs.org/learn/class-inheritance
      
 Beispiele
