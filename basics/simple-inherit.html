@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>this</title>
+</head>
+<body>
+<h1>this</h1>
+<script src="../libs/io.js"></script>
+<script>
+  if (typeof Object.create !== 'function') {
+    Object.create = function(o) {
+      function F(){}
+      F.prototype = o;
+      return new F();
+    }
+  }
+  
+  function copyProperties(from,to) {
+    for (var key in from) {
+      if (Object.prototype.hasOwnProperty.call(from, key)) {
+        to[key] = from[key];
+      }
+    }
+  }
+  
+  var animal = {
+    toString: function() {
+      return this.name;
+    },
+    name: 'animal'
+  };
+  
+  var cat = Object.create(animal);
+  cat.name = 'Mica';
+  println(cat); // --> Mica
+  
+  cat = {};
+  copyProperties(animal, cat);
+  cat.name = 'Mica';
+  println(cat); // --> Mica
+</script>
+</body>
+</html>
