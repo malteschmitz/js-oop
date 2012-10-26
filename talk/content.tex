@@ -18,7 +18,7 @@
 }
 \setbeamertemplate{sections/subsections in toc}[sections numbered]
 
-\setbeamercolor{page number in head/foot}{fg=black}
+\setbeamercolor{page number in head/foot}{parent=normal text}
 
 \AtBeginSection[]{
   \begin{frame}
@@ -34,7 +34,7 @@
 
 \usepackage{listings}
 \lstdefinelanguage{JavaScript}{
-  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, for},
   ndkeywords={class, export, boolean, throw, implements, import, this},
   sensitive=false,
   comment=[l]{//},
@@ -241,7 +241,7 @@
 
 \begin{frame}{differenzielle Vererbung}
   \begin{itemize}
-    \item versteckter Link zum Prototypen
+    \item versteckter Verweis zum Prototypen
     \item beim Lesen Rückgriff auf Prototypen
     \item alle Objekte erben von \lstinline-Object.prototype-  
   \end{itemize}
@@ -414,28 +414,227 @@
 
 \section{Objektorientierung}
 
+\newcommand{\hla}[1]{\textcolor{stringcolor}{#1}}
+\newcommand{\hlb}[1]{\textcolor{keywordcolor}{#1}}
+
+\begin{frame}{Objektorientierung}
+  \begin{description}
+    \item[\hla{Verweis}] versteckter Verweis zum Prototypen \\
+    \item[\hlb{Kopie}] Kopien aller Eigenschaften des Prototyps
+  \end{description}
+  
+  \vskip3ex
+  
+  \begin{itemize}
+    \item \hla{direkt-prototypische Vererbung (Verweis)}
+    \item \hlb{direkt-kopierende Vererbung (Kopie)}
+    \item \hla{pseudoklassische Vererbung (Verweis)}
+    \item \hla{prototypische Vererbung (Verweis)}
+    \item \hlb{funktionale Vererbung (Kopie)}
+  \end{itemize}
+\end{frame}
+
+\subsection{direkt-prototypische Vererbung}
+
+\begin{frame}[fragile]{direkt-prototypische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = {
+      toString: function() {
+        return this.name;
+      },
+      name: 'animal'
+    };
+    
+    
+    var cat = Object.create(animal);
+    cat.name = 'Mica';
+    cat.meow = function() {
+      console.log(this.name + ': Meow!');
+    }
+    console.log(cat); // --> Mica
+  \end{lstlisting}
+\end{frame}
+
+\subsection{direkt-kopierende Vererbung}
+
+\begin{frame}[fragile]{direkt-kopierende Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = {
+      toString: function() {
+        return this.name;
+      },
+      name: 'animal'
+    };
+      
+    var cat = {};
+    copyProperties(animal, cat);
+    cat.name = 'Mica';
+    cat.meow = function() {
+      console.log(this.name + ': Meow!');
+    }
+    console.log(cat); // --> Mica
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{direkt-kopierende Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var ownProp = Object.prototype.hasOwnProperty;
+  
+    var copyProperties = function(from,to) {
+      for (var key in from) {
+        if (ownProp.call(from, key)) {
+          to[key] = from[key];
+        }
+      }
+    }
+  \end{lstlisting}
+\end{frame}
+
 \subsection{pseudoklassische Vererbung}
 
-\begin{frame}
-  no content
+\lstset{basicstyle=\ttfamily\scriptsize}
+
+\begin{frame}[fragile]{pseudoklassische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var Animal = function(name) {
+      this.name = name.toUpperCase();
+    }
+    Animal.prototype.toString = function() {
+      return this.name;
+    }
+    
+    var Cat = function(name) {
+      this.name = name;
+    }
+    Cat.prototype = new Animal();
+    Cat.prototype.constructor = Cat;
+    Cat.prototype.meow = function() {
+      console.log(this.name + ': Meow!');
+    }
+    
+    var cat = new Cat('Mica');
+    console.log(cat); // --> MICA
+  \end{lstlisting}
 \end{frame}
 
 \subsection{prototypische Vererbung}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{prototypische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = makeConstructor(Object, function(name) {
+      this.name = name.toUpperCase();
+    }, {
+      toString: function() {
+        return this.name;
+      }
+    });
+    
+    var cat = makeConstructor(animal, function(name) {
+      this.name = name;
+    }, {
+      meow: function() {
+        console.log(this.name + ': Meow!');
+      }
+    });
+    
+    var c = cat('Mica');
+    console.log(c); // --> MICA
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{prototypische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var makeConstructor = function(extend, initializer, methods) {
+      var func = function() {
+        var that = Object.create(proto);
+        if (typeof initializer === 'function') {
+          initializer.apply(that, arguments);
+        }
+        return that;
+      }
+      var proto = Object.create(extend && extend.prototype);
+      copyProperties(methods, proto);
+      func.prototype = proto;
+      proto.constructor = func;
+      return func;
+    }
+  \end{lstlisting}
 \end{frame}
 
 \subsection{funktionale Vererbung}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{funktionale Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = function(name) {
+      return {
+        name: name.toUpperCase(),
+        toString: function() {
+          return this.name;
+        }
+      }
+    }
+    
+    var cat = function(name) {
+      var that = animal(name);
+      that.meow = function() {
+        console.log(this.name + ': Meow!');
+      }
+      return that;
+    }
+    
+    var c = cat('Mica');
+    console.log(c); // --> MICA
+  \end{lstlisting}
 \end{frame}
 
-\subsection{Vererbung durch Kopieren}
+\begin{frame}[fragile]{funktionale Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = function(name) {
+      name = name.toUpperCase();
+      return {
+        toString: function() {
+          return name;
+        }
+      }
+    }
+    
+    var cat = function(name) {
+      var that = animal(name);
+      that.meow = function() {
+        console.log('???' + ': Meow!');
+      }
+      return that;
+    }
+    
+    var c = cat('Mica');
+    console.log(c); // --> MICA
+  \end{lstlisting}
+\end{frame}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{funktionale Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = function(name, secret) {
+      secret = secret || {};
+      secret.name = name.toUpperCase();
+      return {
+        toString: function() {
+          return secret.name;
+        }
+      }
+    }
+    
+    var cat = function(name) {
+      var secret = {};
+      var that = animal(name, secret);
+      that.meow = function() {
+        console.log(secret.name + ': Meow!');
+      }
+      return that;
+    }
+    
+    var c = cat('Mica');
+    console.log(c); // --> MICA
+  \end{lstlisting}
 \end{frame}
 
 \section{Frameworks}
