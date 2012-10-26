@@ -639,44 +639,287 @@
 
 \section{Frameworks}
 
-\begin{frame}
-  no content
-\end{frame}
-
 \subsection{Underscore.js und \texttt{\_.extend}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{Underscore.js und \texttt{\_.extend}}
+  \begin{lstlisting}[basicstyle=\ttfamily,gobble=4]
+    var person = {name: 'Malte'};
+    var contact = {mail: 'm@mlte.de'};
+    var data = {age: 23, sex: 'male'};
+    // extend person with concat and data
+    _.extend(person, contact, data);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Underscore.js und \texttt{\_.extend}}
+  \begin{lstlisting}[basicstyle=\ttfamily,gobble=4]
+    var _ = {};
+    _.extend = function(obj) {
+      var sources = makeArray(arguments).slice(1);
+      for (var key in sources) {
+        var source = sources[key];
+        for (var prop in source) {
+          obj[prop] = source[prop];
+        }
+      }
+      return obj;
+    }
+  \end{lstlisting}
 \end{frame}
 
 \subsection{jQuery und \texttt{\$.extend}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
+  \begin{lstlisting}[gobble=4]
+    var person = {name: 'Malte'};
+    var contact = {mail: 'm@mlte.de'};
+    var data = {age: 23, sex: 'male'};
+    // extend person with concat and data
+    $.extend(person, contact, data);
+    
+    // shallow copy
+    var p = {name: 'Bjoern'};
+    var q = {options: {note: "Hello"}};
+    $.extend(p,q);
+    p.options.note = "Good Bye";
+    
+    // deep copy
+    p = {name: 'Bjoern'};
+    q = {options: {note: "Hello"}};
+    $.extend(true, p,q);
+    p.options.note = "Good Bye";
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
+  \begin{lstlisting}[gobble=4,basicstyle=\ttfamily\tiny]
+    var jQuery = {}, $=jQuery;
+    
+    jQuery.extend = function() {
+      var options, name, src, copy, copyIsArray, clone,
+        target = arguments[0] || {},
+        i = 1,
+        length = arguments.length,
+        deep = false;
+    
+      if (typeof target === "boolean") {
+        deep = target;
+        target = arguments[1] || {};
+        // skip the boolean and the target
+        i = 2;
+      }
+    
+      for (; i < length; i++) {
+        if ((options = arguments[i]) != null) {
+          for (name in options) {
+            src = target[name];
+            copy = options[name];
+            if (deep && copy && jQuery.isPlainObject(copy)) {
+              clone = jQuery.isPlainObject(src) ? src : {};
+              target[name] = jQuery.extend(deep, clone, copy);
+            } else if (copy !== undefined) {
+              target[name] = copy;
+            }
+          }
+        }
+      }
+      return target;
+    };
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{typeof} ist kaputt}
+  \begin{tabular}{ll}
+    Typ & \lstinline-typeof- \\ \hline
+    \lstinline-undefined- & \lstinline-'undefined'- \\
+    \lstinline-null- & \lstinline-'object'- \\
+    Array & \lstinline-'object'- \\
+    Boolean & \lstinline-'boolean'- \\
+    Number & \lstinline-'number'- \\
+    String & \lstinline-'string'- \\
+    Funktion & \lstinline-'function'- \\
+    alles andere & \lstinline-'object'-
+  \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]{jQuery und \texttt{\$.type}}
+  \begin{lstlisting}[gobble=4]
+    var class2type = [];
+    var types = ["Boolean", "Number", "String", "Function",
+      "Array", "Date", "RegExp", "Object"];
+    for (var i = 0; i < types.length; i++) {
+      class2type["[object " + types[i] + "]"] = types[i].toLowerCase();
+    }
+    jQuery.type = function(obj) {
+      return obj == null ?
+        String(obj) :
+        class2type[Object.prototype.toString.call(obj)] || "object";
+    };
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{jQuery und \texttt{\$.isPlainObject}}
+  \begin{lstlisting}[gobble=4]
+    jQuery.isPlainObject = function(obj) {
+      var ownProp = Object.prototype.hasOwnProperty;
+    
+      if (!obj || jQuery.type(obj) !== "object" ||
+          obj.nodeType || obj == obj.window) {
+        return false;
+      }
+    
+      if (obj.constructor &&
+        !ownProp.call(obj, "constructor") &&
+        !ownProp.call(obj.constructor.prototype, "isPrototypeOf")) {
+        return false;
+      }
+    
+      // Own properties are enumerated firstly, so to speed up,
+      // if last one is own, then all properties are own.
+    
+      var key;
+      for (key in obj) {}
+    
+      return key === undefined ||
+        ownProp.call(obj, key);
+    };
+  \end{lstlisting}
 \end{frame}
 
 \subsection{YUI und \texttt{Y.extend}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{YUI und \texttt{Y.extend}}
+  \begin{lstlisting}[gobble=4]
+    var Person = function() {
+      this.name = "Adam";
+    }
+    Person.prototype.getName = function() {
+      return this.name;
+    };
+    var Programmer = function(){}
+    Y.extend(Programmer, // the object to modify
+      Person, // the object to inherit
+      {foo: true}, // prototype properties to add/override
+      {limit: "sky"} // static properties to add/override
+    );
+    
+    var guru = new Programmer();
+    console.log(guru.getName()); // --> Adam
+    console.log(guru.foo); // --> true
+    console.log(Programmer.limit); // --> Sky
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{YUI und \texttt{Y.extend}}
+  \begin{lstlisting}[gobble=4]
+    var Y = {};    
+    // r - receiver: the function to modify
+    // s - sender: the function to inherit from
+    // px - prototype properties to add to r.prototype
+    // sx - static propoperties to add to r
+    Y.extend = function(r, s, px, sx) {
+      r.prototype = Object.create(s.prototype);
+      r.prototype.constructor = r;
+      r.superclass = s.prototype;
+      // fix constructor property of sender
+      if (s != Object && s.prototype.constructor ==
+                  Object.prototype.constructor) {
+          s.prototype.constructor = s;
+      }
+      // add prototype overrides
+      if (px) {
+          copyProperties(px, r.prototype);
+      }
+      // add object overrides
+      if (sx) {
+          copyProperties(sx, r);
+      }
+      return r;
+    };
+  \end{lstlisting}
 \end{frame}
 
 \subsection{Backbone.js und \texttt{Backbone.Model.extend}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{Backbone.js und \texttt{Backbone.Model.extend}}
+  \begin{lstlisting}[gobble=4]
+    var FooModel = Backbone.Model.extend({
+      f: function() {
+        return "instance foo";
+      }
+    }, {
+      f: function() {
+        return "static foo"
+      }
+    });
+    
+    var BarModel = FooModel.extend({
+      f: function() {
+        return "instance bar"
+      }
+    }, {
+      f: function() {
+        return "static bar"
+      }
+    });
+    
+    var foo = new FooModel();
+    var bar = new BarModel();
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Backbone.js und \texttt{Backbone.Model.extend}}
+  \begin{lstlisting}[gobble=4]
+    var Backbone = {
+      Model: function() {}
+    };
+    
+    Backbone.Model.extend = function (protoProps, classProps) {
+      var child = inherits(this, protoProps, classProps);
+      child.extend = this.extend;
+      return child;
+    };
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Backbone.js und \texttt{Backbone.Model.extend}}
+  \begin{lstlisting}[gobble=4]
+    var inherits = function(parent, protoProps, staticProps) {
+      var child;
+    
+      if (protoProps && protoProps.hasOwnProperty('constructor')) {
+        child = protoProps.constructor;
+      } else {
+        child = function(){ parent.apply(this, arguments); };
+      }
+    
+      // Inherit class (static) properties from parent.
+      _.extend(child, parent);
+    
+      child.prototype = Object.create(parent.prototype);
+      if (protoProps) _.extend(child.prototype, protoProps);
+      if (staticProps) _.extend(child, staticProps);
+      child.prototype.constructor = child;
+    
+      return child;
+    };
+  \end{lstlisting}
 \end{frame}
 
 \subsection{MooTools und \texttt{new Class}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{MooTools und \texttt{new Class}}
+  \begin{lstlisting}[gobble=4]
+  
+  \end{lstlisting}
 \end{frame}
 
 \subsection{Prototype und \texttt{Class.create}}
 
-\begin{frame}
-  no content
+\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
+  \begin{lstlisting}[gobble=4]
+  
+  \end{lstlisting}
 \end{frame}
 
 \section*{Zusammenfassung}
