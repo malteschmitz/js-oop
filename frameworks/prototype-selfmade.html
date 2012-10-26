@@ -43,7 +43,7 @@ var Class = (function() {
     if (parent) {
       subclass.prototype = parent.prototype;
       klass.prototype = new subclass;
-      // same as subclass.prototype = Object.create(parent.prototype)
+      // same as klass.prototype = Object.create(parent.prototype)
     }
 
     for (var i = 0, length = properties.length; i < length; i++)
@@ -64,9 +64,8 @@ var Class = (function() {
       if (ancestor && typeof value === 'function' &&
           argumentNames(value)[0] === "$super") {
         value = (function(p,v) {
-          var old = function() { return ancestor[p].apply(this, arguments); };
           return function() {
-            var a = [old.bind(this)].concat(arguments);
+            var a = [ancestor[p].bind(this)].concat(Array.prototype.slice.apply(arguments));
             return v.apply(this, a);
           };
         })(property, value);
