@@ -35,7 +35,7 @@
 \usepackage{listings}
 \lstdefinelanguage{JavaScript}{
   keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, for},
-  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywords={boolean, throw, this},
   sensitive=false,
   comment=[l]{//},
   morecomment=[s]{/*}{*/},
@@ -80,9 +80,9 @@
   \column{40em}
   \begin{lstlisting}[gobble=4]
     var meta = {
-      author: "Malte Schmitz",
+      author: 'Malte Schmitz',
       date: new Date(2012, 10, 16),
-      event: "MetaNook"
+      event: 'MetaNook'
     }
   \end{lstlisting}
   \end{columns}
@@ -178,9 +178,9 @@
 \begin{frame}[fragile]{Objektliterale}
   \begin{lstlisting}[gobble=4]
     var meta = {
-      author: "Malte Schmitz",
+      author: 'Malte Schmitz',
       date: new Date(2012, 10, 16),
-      event: "MetaNook"
+      event: 'MetaNook'
     }
   \end{lstlisting}
 \end{frame}
@@ -278,9 +278,9 @@
   
   \vskip3ex
   
-  \uncover<1->{\lstinline-var meta = \{author: "Malte"\};-}\\
+  \uncover<1->{\lstinline-var meta = \{author: 'Malte'\};-}\\
   \uncover<3->{\lstinline-var talk = Object.create(meta);-}\\
-  \uncover<5->{\lstinline-talk.author = "Schmitz";-}\\
+  \uncover<5->{\lstinline-talk.author = 'Schmitz';-}\\
   \uncover<7->{\lstinline-delete talk.author;-}
   
   \vskip3ex
@@ -447,11 +447,11 @@
     
     
     var cat = Object.create(animal);
-    cat.name = 'Mica';
+    cat.name = 'Micia';
     cat.meow = function() {
       console.log(this.name + ': Meow!');
     }
-    console.log(cat); // --> Mica
+    console.log(cat); // --> Micia
   \end{lstlisting}
 \end{frame}
 
@@ -468,11 +468,11 @@
       
     var cat = {};
     copyProperties(animal, cat);
-    cat.name = 'Mica';
+    cat.name = 'Micia';
     cat.meow = function() {
       console.log(this.name + ': Meow!');
     }
-    console.log(cat); // --> Mica
+    console.log(cat); // --> Micia
   \end{lstlisting}
 \end{frame}
 
@@ -512,8 +512,8 @@
       console.log(this.name + ': Meow!');
     }
     
-    var cat = new Cat('Mica');
-    console.log(cat); // --> MICA
+    var cat = new Cat('Micia');
+    console.log(cat); // --> MICIA
   \end{lstlisting}
 \end{frame}
 
@@ -537,8 +537,8 @@
       }
     });
     
-    var c = cat('Mica');
-    console.log(c); // --> MICA
+    var c = cat('Micia');
+    console.log(c); // --> MICIA
   \end{lstlisting}
 \end{frame}
 
@@ -582,8 +582,8 @@
       return that;
     }
     
-    var c = cat('Mica');
-    console.log(c); // --> MICA
+    var c = cat('Micia');
+    console.log(c); // --> MICIA
   \end{lstlisting}
 \end{frame}
 
@@ -606,8 +606,8 @@
       return that;
     }
     
-    var c = cat('Mica');
-    console.log(c); // --> MICA
+    var c = cat('Micia');
+    console.log(c); // --> MICIA
   \end{lstlisting}
 \end{frame}
 
@@ -632,8 +632,8 @@
       return that;
     }
     
-    var c = cat('Mica');
-    console.log(c); // --> MICA
+    var c = cat('Micia');
+    console.log(c); // --> MICIA
   \end{lstlisting}
 \end{frame}
 
@@ -671,45 +671,30 @@
 
 \begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
   \begin{lstlisting}[gobble=4]
-    var person = {name: 'Malte'};
-    var contact = {mail: 'm@mlte.de'};
-    var data = {age: 23, sex: 'male'};
-    // extend person with concat and data
-    $.extend(person, contact, data);
-    
     // shallow copy
-    var p = {name: 'Bjoern'};
-    var q = {options: {note: "Hello"}};
-    $.extend(p,q);
-    p.options.note = "Good Bye";
+    var person = {name: 'Malte'};
+    var meta = {options: {say: 'Hello'}};
+    $.extend(false, person, meta);
+    person.options.say = 'Good Bye';
+    console.log(meta.options.say); // --> Good Bye
     
     // deep copy
-    p = {name: 'Bjoern'};
-    q = {options: {note: "Hello"}};
-    $.extend(true, p,q);
-    p.options.note = "Good Bye";
+    person = {name: 'Malte'};
+    meta = {options: {say: 'Hello'}};
+    $.extend(true, person, meta);
+    person.options.note = 'Good Bye';
+    console.log(meta.options.say); // --> Hello
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
-  \begin{lstlisting}[gobble=4,basicstyle=\ttfamily\tiny]
+  \begin{lstlisting}[gobble=4]
     var jQuery = {}, $=jQuery;
     
-    jQuery.extend = function() {
-      var options, name, src, copy, copyIsArray, clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false;
-    
-      if (typeof target === "boolean") {
-        deep = target;
-        target = arguments[1] || {};
-        // skip the boolean and the target
-        i = 2;
-      }
-    
-      for (; i < length; i++) {
+    jQuery.extend = function(deep) {
+      var options, name, src, copy, clone, i,
+        target = arguments[1] || {};    
+      for (i = 1; i < arguments.length; i++) {
         if ((options = arguments[i]) != null) {
           for (name in options) {
             src = target[name];
@@ -745,15 +730,15 @@
 \begin{frame}[fragile]{jQuery und \texttt{\$.type}}
   \begin{lstlisting}[gobble=4]
     var class2type = [];
-    var types = ["Boolean", "Number", "String", "Function",
-      "Array", "Date", "RegExp", "Object"];
+    var types = ['Boolean', 'Number', 'String', 'Function',
+      'Array', 'Date', 'RegExp', 'Object'];
     for (var i = 0; i < types.length; i++) {
-      class2type["[object " + types[i] + "]"] = types[i].toLowerCase();
+      class2type['[object ' + types[i] + ']'] = types[i].toLowerCase();
     }
     jQuery.type = function(obj) {
       return obj == null ?
         String(obj) :
-        class2type[Object.prototype.toString.call(obj)] || "object";
+        class2type[Object.prototype.toString.call(obj)] || 'object';
     };
   \end{lstlisting}
 \end{frame}
@@ -763,14 +748,14 @@
     jQuery.isPlainObject = function(obj) {
       var ownProp = Object.prototype.hasOwnProperty;
     
-      if (!obj || jQuery.type(obj) !== "object" ||
+      if (!obj || jQuery.type(obj) !== 'object' ||
           obj.nodeType || obj == obj.window) {
         return false;
       }
     
       if (obj.constructor &&
-        !ownProp.call(obj, "constructor") &&
-        !ownProp.call(obj.constructor.prototype, "isPrototypeOf")) {
+        !ownProp.call(obj, 'constructor') &&
+        !ownProp.call(obj.constructor.prototype, 'isPrototypeOf')) {
         return false;
       }
     
@@ -791,7 +776,7 @@
 \begin{frame}[fragile]{YUI und \texttt{Y.extend}}
   \begin{lstlisting}[gobble=4]
     var Person = function() {
-      this.name = "Adam";
+      this.name = 'Adam';
     }
     Person.prototype.getName = function() {
       return this.name;
@@ -800,7 +785,7 @@
     Y.extend(Programmer, // the object to modify
       Person, // the object to inherit
       {foo: true}, // prototype properties to add/override
-      {limit: "sky"} // static properties to add/override
+      {limit: 'sky'} // static properties to add/override
     );
     
     var guru = new Programmer();
@@ -820,7 +805,6 @@
     Y.extend = function(r, s, px, sx) {
       r.prototype = Object.create(s.prototype);
       r.prototype.constructor = r;
-      r.superclass = s.prototype;
       // fix constructor property of sender
       if (s != Object && s.prototype.constructor ==
                   Object.prototype.constructor) {
@@ -845,21 +829,21 @@
   \begin{lstlisting}[gobble=4]
     var FooModel = Backbone.Model.extend({
       f: function() {
-        return "instance foo";
+        return 'instance foo';
       }
     }, {
       f: function() {
-        return "static foo"
+        return 'static foo'
       }
     });
     
     var BarModel = FooModel.extend({
       f: function() {
-        return "instance bar"
+        return 'instance bar'
       }
     }, {
       f: function() {
-        return "static bar"
+        return 'static bar'
       }
     });
     
@@ -874,7 +858,7 @@
       Model: function() {}
     };
     
-    Backbone.Model.extend = function (protoProps, classProps) {
+    Backbone.Model.extend = function(protoProps, classProps) {
       var child = inherits(this, protoProps, classProps);
       child.extend = this.extend;
       return child;
@@ -910,7 +894,79 @@
 
 \begin{frame}[fragile]{MooTools und \texttt{new Class}}
   \begin{lstlisting}[gobble=4]
-  
+    var Animal = new Class({
+      initialize: function(age){
+        this.age = age;
+      }
+    });
+    var Cat = new Class({
+      Extends: Animal,
+      setName: function(name){
+        this.name = name
+      }
+    });
+    var Dog = new Class({
+      Implements: Animal,
+      setName: function(name){
+        this.name = name
+      }
+    });
+    var cat = new Cat(20);
+    var dog = new Dog(7);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{MooTools und \texttt{new Class}}
+  \begin{lstlisting}[gobble=4]
+    var Class = function(params){
+      if (typeof params === 'function') {
+        params = {initialize: params};
+      }
+      var newClass = function(){
+        reset(this);
+        if (this.initialize) {
+          return this.initialize.apply(this, arguments);
+        }
+      }
+      copyProperties(this,newClass);
+      implementProperties(params,newClass);
+      return newClass;
+    };
+    
+    Class.Mutators = {
+      Extends: function(parent){
+        this.prototype = Object.create(parent.prototype);
+      },
+      Implements: function(item){
+        implementProperties(item, this);
+      }
+    };
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{MooTools und \texttt{new Class}}
+  \begin{lstlisting}[gobble=4]
+    var implementProperties = function(from,to) {
+      for (var key in from) {
+        if (Object.prototype.hasOwnProperty.call(from, key)) {
+          if (Class.Mutators.hasOwnProperty(key)){
+            Class.Mutators[key].call(to, from[key]);
+          } else {
+            to.prototype[key] = from[key];
+          }
+        }
+      }
+    }
+    
+    var reset = function(object){
+    	for (var key in object){
+    		var value = object[key]; 
+    		if (typeof value === 'object') {
+          object[key] = reset(Object.create(value));
+        }
+    	}
+    	return object;
+    };
   \end{lstlisting}
 \end{frame}
 
@@ -918,7 +974,89 @@
 
 \begin{frame}[fragile]{Prototype und \texttt{Class.create}}
   \begin{lstlisting}[gobble=4]
+    var Person = Class.create({
+      initialize: function(name) {
+        this.name = name;
+      },
+      say: function(message) {
+        return this.name + ': ' + message;
+      }
+    });
+    
+    var Pirate = Class.create(Person, {
+      say: function($super, message) {
+        return $super(message) + ', yarr!';
+      }
+    });
+    
+    var john = new Pirate('Long John');
+    console.log(john.say('ahoy matey'));
+        // --> Long John: ahoy matey, yarr!
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
+  \begin{lstlisting}[gobble=4]
+    var Class = {Methods: {}};
+    Class.create = function() {
+      var parent = null, properties = makeArray(arguments);
+      if (typeof properties[0] === 'function')
+        parent = properties.shift();
   
+      var klass = function() {
+        this.initialize.apply(this, arguments);
+      }  
+      copyProperties(Class.Methods, klass);
+      if (parent) {
+        klass.prototype = Object.create(parent.prototype)
+      }
+      klass.prototype.constructor = klass;
+  
+      for (var i = 0; i < properties.length; i++)
+        klass.addMethods(properties[i]);
+  
+      if (!klass.prototype.initialize)
+        klass.prototype.initialize = function() {};
+  
+      return klass;
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
+  \begin{lstlisting}[gobble=4]
+    Class.Methods.addMethods = function(source) {
+      var ancestor = this.superclass && this.superclass.prototype;
+  
+      for (var property in source) {
+        var value = source[property];
+        if (ancestor && typeof value === 'function' &&
+            argumentNames(value)[0] === '$super') {
+          value = (function(p,v) {
+            return function() {
+              var a = [ancestor[p].bind(this)].
+                concat(makeArray(arguments));
+              return v.apply(this, a);
+            };
+          })(property, value);
+        }
+        this.prototype[property] = value;
+      }
+  
+      return this;
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
+  \begin{lstlisting}[gobble=4]
+    var argumentNames = function(f) {
+      var re = /^[\s\(]*function[^(]*\(([^)]*)\)/;
+      var names = f.toString().match(re)[1]
+        .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
+        .replace(/\s+/g, '').split(',');
+      return names.length == 1 && !names[0] ? [] : names;
+    }
   \end{lstlisting}
 \end{frame}
 
