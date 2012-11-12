@@ -207,8 +207,8 @@
 
 \begin{frame}[fragile]{Iteration über Objekteigenschaften}
   \begin{lstlisting}[gobble=4]
-    for (var key in meta) {
-      var value = meta[key];
+    for (var key in cat) {
+      var value = cat[key];
       console.log(key + ': ' + value);
     }
   \end{lstlisting}
@@ -217,10 +217,10 @@
 \begin{frame}[fragile]{\texttt{\&\&} und \texttt{||}}
   \begin{lstlisting}[gobble=4]
     // guard operator
-    var author = meta && meta.author;
+    var name = cat && cat.name;
     
     // default operator
-    var obj = meta || {};
+    var obj = cat || {};
   \end{lstlisting}
 \end{frame}
 
@@ -235,8 +235,8 @@
   \vskip5ex
   
   \begin{lstlisting}[gobble=4]
-    if (meta.author) {
-      console.log(meta.author);
+    if (cat.name) {
+      console.log(cat.name);
     }
   \end{lstlisting}
 \end{frame}
@@ -373,11 +373,11 @@
     sum.call(window, 1, 2, 3);
     
     
-    meta.add = sum;
+    cat.add = sum;
     
-    meta.add(1,2,3);
-    sum.apply(meta, [1, 2, 3]);
-    sum.call(meta, 1, 2, 3);
+    cat.add(1,2,3);
+    sum.apply(cat, [1, 2, 3]);
+    sum.call(cat, 1, 2, 3);
   \end{lstlisting}
 \end{frame}
 
@@ -424,10 +424,10 @@
 
 \begin{frame}[fragile]{Iteration über \emph{eigene} Objekteigenschaften}
   \begin{lstlisting}[gobble=4]
-    for (var key in meta) {
+    for (var key in cat) {
       if (Object.prototype.
-          hasOwnProperty.apply(meta, key)) {
-        var value = meta[key];
+          hasOwnProperty.apply(cat, key)) {
+        var value = cat[key];
         console.log(key + ': ' + value);
       }
     }
