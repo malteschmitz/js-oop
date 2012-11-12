@@ -111,7 +111,8 @@
   \url{github.com/malteschmitz/js-oop}
   \begin{itemize}
     \item diese Präsentation
-    \item alle Beispiele
+    \item \LaTeX-Quellcode
+    \item JavaScript-Beispiele
   \end{itemize}
 \end{frame}
 
@@ -120,23 +121,25 @@
 \subsection{Objekte}
 
 \begin{frame}[fragile]{Variablen}
+  \begin{lstlisting}[gobble=4]
+    // Deklaration
+    var a;
+    console.log(a); // --> undefined
+    
+    // Initialisierung
+    a = 42;
+    console.log(a); // --> 42
+  \end{lstlisting}
+  
   \begin{itemize}
     \item dynamische Typisierung, \emph{nicht} ungetypt
-    \item statische (lexikalische) Bindung
     \item Sichtbarkeitsbereich: ganze aktuelle Funktion
   \end{itemize}
   
   \begin{lstlisting}[gobble=4]
-    var a; // Deklaration
-    console.log(a); // --> undefined
-    
-    a = 42; // Initialisierung
-    console.log(a); // --> 42
-    
-    // b ist hier bereits deklariert,
-    // aber nicht initialisiert
     console.log(b); // --> undefined
-    var b = 23; // Deklaration und Initialisierung
+    // Deklaration und Initialisierung
+    var b = 23; 
   \end{lstlisting}  
 \end{frame}
 
@@ -159,28 +162,45 @@
     \item dynamische Sammlung von Eigenschaften (Hash, Map, \ldots)
     \item alles ist ein Objekt
   \end{itemize}
-    
-  \begin{lstlisting}[gobble=4]
-    // Objekt erzeugen
-    var o = {};
-    
-    // Eigenschaft setzen
-    o.foo = 42;
-    
-    // Eigenschaft auslesen
-    console.log(o.foo); // --> 42
-    
-    // Eigenschaft löschen
-    delete o.foo;
-  \end{lstlisting}  
+  
+  \begin{onlyenv}<1>
+    \begin{lstlisting}[gobble=6]
+      // Objekt erzeugen
+      var o = {};
+      
+      // Eigenschaft setzen
+      o.foo = 42;
+      
+      // Eigenschaft auslesen
+      console.log(o.foo); // --> 42
+      
+      // Eigenschaft löschen
+      delete o.foo;
+    \end{lstlisting}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2>
+    \begin{lstlisting}[gobble=6]
+      // Objekt erzeugen
+      var o = {};
+      
+      // Eigenschaft setzen
+      o['foo'] = 42;
+      
+      // Eigenschaft auslesen
+      console.log(o['foo']); // --> 42
+      
+      // Eigenschaft löschen
+      delete o['foo'];
+    \end{lstlisting}
+  \end{onlyenv}
 \end{frame}
 
 \begin{frame}[fragile]{Objektliterale}
   \begin{lstlisting}[gobble=4]
-    var meta = {
-      author: 'Malte Schmitz',
-      date: new Date(2012, 10, 16),
-      event: 'MetaNook'
+    var cat = {
+      name: 'Micia',
+      age: 12
     }
   \end{lstlisting}
 \end{frame}
@@ -224,23 +244,30 @@
 \begin{frame}[fragile]{globale Variablen}
   \begin{itemize}
     \item Eigenschaften des globalen Objektes
+    \item \lstinline-window- im Browser
   \end{itemize}
   
-  \begin{lstlisting}[gobble=4]
-    this
-    window
-    window.window
+  \vskip3ex
   
+  \begin{lstlisting}[gobble=4]
     foo = 12;
     // entspricht
-    windows.foo = 12;
+    window.foo = 12;
   \end{lstlisting}
 \end{frame}
 
 \subsection{Vererbung}
 
 \begin{frame}{differenzielle Vererbung}
+  \begin{block}{Prototyp}
+    Prototyp ist ein GoF-Entwurfsmuster. Neue Instanzen\\
+    basieren auf prototypischen Instanzen (\enquote{Vorlagen}).
+  \end{block}
+
+  \vskip3ex
+
   \begin{itemize}
+    \item zwischen Objekten; \emph{keine} Klassen
     \item versteckter Verweis zum Prototypen
     \item beim Lesen Rückgriff auf Prototypen
     \item alle Objekte erben von \lstinline-Object.prototype-  
@@ -250,47 +277,41 @@
 \begin{frame}[fragile]{differenzielle Vererbung}
   \begin{tikzpicture}[shorten >=1pt]
     \uncover<4->{
-      \node[inner sep=0pt] (talk) {
+      \node[inner sep=0pt] (cat) {
         \begin{tabular}{|l|l|}
           \hline
           proto & \\ \hline
-          \uncover<6-7>{\lstinline-name-} & \uncover<6-7>{\lstinline-Schmitz-} \\ \hline 
+          \uncover<6-7>{\lstinline-name-} & \uncover<6-7>{\lstinline-Micia-} \\ \hline 
         \end{tabular}
       };
-      \node[anchor=south west,inner sep=1pt] at (talk.north west) {\lstinline-talk-};
-      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (talk.center) (talk dot) {};
+      \node[anchor=south west,inner sep=1pt] at (cat.north west) {\lstinline-cat-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (cat.center) (cat dot) {};
     }
     \uncover<2->{
-      \node[inner sep=0pt,node distance=1em,right=of talk] (meta) {
+      \node[inner sep=0pt,node distance=1em,right=of cat] (dog) {
         \begin{tabular}{|l|l|}
           \hline
           proto & \\ \hline
-          \lstinline-name- & \lstinline-Malte- \\ \hline 
+          \lstinline-name- & \lstinline-Cody- \\ \hline 
         \end{tabular}
       };
-      \node[anchor=south west,inner sep=1pt] at (meta.north west) {\lstinline-meta-};
-      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (meta.center) (meta dot) {};
-      \node[right=of meta dot] (obj) {\lstinline-Object.prototype-};
+      \node[anchor=south west,inner sep=1pt] at (dog.north west) {\lstinline-dog-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (dog.center) (dog dot) {};
+      \node[right=of dog dot] (obj) {\lstinline-Object.prototype-};
     }
-    \only<4->{\draw[->] (talk dot) edge (meta.west |- talk dot);}
-    \only<2->{\draw[->] (meta dot) edge (obj);}
+    \only<4->{\draw[->] (cat dot) edge (dog.west |- cat dot);}
+    \only<2->{\draw[->] (dog dot) edge (obj);}
   \end{tikzpicture}
   
   \vskip3ex
   
-  \uncover<1->{\lstinline-var meta = \{author: 'Malte'\};-}\\
-  \uncover<3->{\lstinline-var talk = Object.create(meta);-}\\
-  \uncover<5->{\lstinline-talk.author = 'Schmitz';-}\\
-  \uncover<7->{\lstinline-delete talk.author;-}
-  
-  \vskip3ex
-  
-  \begin{overprint}
-    \only<1-3,5,7>{\quad}
-    \only<4>{\lstinline|console.log(talk.author); // --> Malte|}
-    \only<6>{\lstinline|console.log(talk.author); // --> Schmitz|}
-    \only<8>{\lstinline|console.log(talk.author); // --> Malte|}
-  \end{overprint}
+  \uncover<1->{\lstinline-var dog = \{name: 'Cody'\};-}\\
+  \uncover<3->{\lstinline-var cat = Object.create(dog);-}\\
+  \uncover<4->{\lstinline|console.log(cat.name); // --> Cody|}
+  \uncover<5->{\lstinline-cat.name = 'Micia';-}\\
+  \uncover<6->{\lstinline|console.log(cat.name); // --> Micia|}
+  \uncover<7->{\lstinline-delete cat.name;-}
+  \uncover<8->{\lstinline|console.log(cat.name); // --> Cody|}
 \end{frame}
 
 \subsection{Funktionen}
@@ -315,28 +336,22 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Currying}
-  \begin{onlyenv}<1>
-    \begin{lstlisting}[gobble=6]
-      var add = function(a,b) {
-        return a + b;
+\begin{frame}[fragile]{Funktionsabschluss}
+  \begin{lstlisting}[gobble=4]
+    var makeIncrementer = function(n) {
+      return function() {
+        return n++;
       }
-      var inc = curry(add,1);
-      console.log(inc(6)); // --> 7
-    \end{lstlisting}
-  \end{onlyenv}
-  
-  \begin{onlyenv}<2>
-    \begin{lstlisting}[gobble=6]
-      var curry = function(func) {
-        var fixed = makeArray(arguments).slice(1);
-        return function() {
-          var args = makeArray(arguments);
-          return func.apply(null, fixed.concat(args));
-        }
-      }
-    \end{lstlisting}
-  \end{onlyenv}
+    }
+    
+    a = makeIncrementer(1);
+    b = makeIncrementer(5);
+    
+    console.log(a()); // --> 1
+    console.log(b()); // --> 5
+    console.log(a()); // --> 2
+    console.log(b()); // --> 6
+  \end{lstlisting}
 \end{frame}
 
 \subsection{Funktionsaufrufe}
@@ -366,13 +381,25 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{\lstinline-prototype--Eigenschaft}
+  \begin{lstlisting}[gobble=4]
+    var f = function() {};
+    
+    // impliziert
+    
+    f.prototype = {
+      constructor: f
+    };
+  \end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]{\lstinline-new--Operator}
   \begin{lstlisting}[gobble=4]
     var a = new Fun(42);
-  
+
+    // entspricht  
   
     var a = Object.create(Fun.prototype);
-    a.constructor = Fun;
     var res = Fun.call(a, 42);
     if (res && (typeof res === 'object' ||
                 typeof res === 'function')) {
@@ -381,23 +408,30 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Iteration über Objekteigenschaften}
-  \begin{lstlisting}[gobble=4,basicstyle=\small\ttfamily]
+\begin{frame}[fragile]{\lstinline-new--Operator}
+  \begin{lstlisting}[gobble=4]
+    var Animal = function(name) {
+      this.name = name;
+    };
+    Animal.prototype.say = function(text) {
+      console.log(this.name + ': ' + text)
+    };
+    
+    var erwin = new Animal('Erwin');
+    erwin.say('Hello'); // --> Erwin: Hello
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Iteration über \emph{eigene} Objekteigenschaften}
+  \begin{lstlisting}[gobble=4]
     for (var key in meta) {
-      if (Object.prototype.hasOwnProperty.apply(key)) {
+      if (Object.prototype.
+          hasOwnProperty.apply(meta, key)) {
         var value = meta[key];
         console.log(key + ': ' + value);
       }
     }
   \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{\lstinline-makeArray-}
-  \begin{lstlisting}[gobble=4]
-    var makeArray = function(a) {
-      return Array.prototype.slice.call(a);
-    }
-  \end{lstlisting}  
 \end{frame}
 
 \begin{frame}[fragile]{\lstinline-Object.create-}
@@ -1118,6 +1152,44 @@
     \bibitem{2} Douglas Crockford
     \newblock \emph{JavaScript: The Good Parts}
   \end{thebibliography}
+\end{frame}
+
+\appendix
+
+\section{Anhang}
+
+\subsection{partielle Applikation}
+
+\begin{frame}[fragile]{\lstinline-makeArray-}
+  \begin{lstlisting}[gobble=4]
+    var makeArray = function(a) {
+      return Array.prototype.slice.call(a);
+    }
+  \end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]{partielle Applikation}
+  \begin{onlyenv}<1>
+    \begin{lstlisting}[gobble=6]
+      var add = function(a,b) {
+        return a + b;
+      }
+      var inc = partial(add,1);
+      console.log(inc(6)); // --> 7
+    \end{lstlisting}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2>
+    \begin{lstlisting}[gobble=6]
+      var partial = function(func) {
+        var fixed = makeArray(arguments).slice(1);
+        return function() {
+          var args = makeArray(arguments);
+          return func.apply(null, fixed.concat(args));
+        }
+      }
+    \end{lstlisting}
+  \end{onlyenv}
 \end{frame}
 
 \end{document}
