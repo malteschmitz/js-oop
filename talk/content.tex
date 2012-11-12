@@ -30,7 +30,7 @@
 }
 
 \usepackage{tikz}
-\usetikzlibrary{shapes.multipart,positioning}
+\usetikzlibrary{shapes.multipart,positioning,arrows}
 
 \usepackage{listings}
 \lstdefinelanguage{JavaScript}{
@@ -448,8 +448,52 @@
 
 \section{Objektorientierung}
 
+\tikzset{
+  class/.style={
+    every text node part/.style={align=center},
+    rectangle split,
+    rectangle split parts=3,
+    draw,
+    text width=#1,
+    fill=white!9!black
+  },  
+  inherits/.style={
+    ->,
+    >=open triangle 90,
+    shorten >=1pt
+  }
+}
+
 \begin{frame}{von Katzen und Hunden}
-  
+  \begin{center}
+    \begin{tikzpicture}[node distance=1.5cm and -1cm]
+      \node[class=3.5cm]
+        (Animal)
+        {\strut Animal
+        \nodepart{two}
+        \strut +name: String
+        \nodepart{three}
+        \strut +say(t: String): void};
+        
+      \node[class=2.5cm, below left=of Animal]
+        (Cat)
+        {\strut Cat
+        \nodepart{two}
+        \nodepart{three}
+        \strut +meow(): void};
+        
+      \node[class=2.5cm, below right=of Animal]
+        (Dog)
+        {\strut Dog
+        \nodepart{two}
+        \nodepart{three}
+        \strut +bark(): void};
+        
+      \draw[thick]
+        (Dog.north) -- ++(0,0.75) -- ++(-2,0) edge[inherits] ++(0,0.75)
+        (Cat.north) -- ++(0,0.75) -- ++(2,0) edge[inherits] ++(0,0.75);
+    \end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \newcommand{\hla}[1]{\textcolor{stringcolor}{#1}}
