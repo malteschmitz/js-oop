@@ -1,23 +1,31 @@
 \documentclass{article}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes.multipart,positioning}
+\usetikzlibrary{%
+  shapes.multipart,%
+  positioning,%
+  arrows%
+}
 
 \usepackage{listings}
 
 \begin{document}
   \begin{tikzpicture}[
-      shorten >=1pt,
       every text node part/.style={align=center},
       class/.style={
         rectangle split,
         rectangle split parts=3,
         draw,
-        text width=3.5cm
+        text width=#1
       },
-      node distance=1.5cm and -1.5cm
+      node distance=1.5cm and -1cm,
+      inherits/.style={
+        ->,
+        >=open triangle 90,
+        shorten >=1pt
+      }
     ]
-    \node[class]
+    \node[class=3.5cm]
       (Animal)
       {\strut Animal
       \nodepart{two}
@@ -25,18 +33,21 @@
       \nodepart{three}
       \strut +say(t: String): void};
       
-    \node[class, below left=of Animal]
+    \node[class=2.5cm, below left=of Animal]
       (Cat)
       {\strut Cat
       \nodepart{two}
       \nodepart{three}
       \strut +meow(): void};
       
-    \node[class, below right=of Animal]
+    \node[class=2.5cm, below right=of Animal]
       (Dog)
       {\strut Dog
       \nodepart{two}
       \nodepart{three}
       \strut +bark(): void};
+      
+    \draw (Dog.north) -- ++(0,0.75) -- ++(-2,0) edge[inherits] ++(0,0.75)
+          (Cat.north) -- ++(0,0.75) -- ++(2,0) edge[inherits] ++(0,0.75);
   \end{tikzpicture}
 \end{document}
