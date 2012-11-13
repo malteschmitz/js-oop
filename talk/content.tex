@@ -1082,8 +1082,7 @@
           console.log(secret.name + ': ' + t)
         }
       }
-    }
-    
+    }    
     var cat = function(name) {
       var that = animal(name);
       that.meow = function() {
@@ -1094,7 +1093,6 @@
       }
       return that;
     }
-    
     var micia = cat('Micia');
     micia.meow(); // --> Micia: Meow!
     console.log(micia.name()); // --> Micia
