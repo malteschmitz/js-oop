@@ -454,7 +454,7 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{\lstinline-Object.create-}
+\begin{frame}[fragile]{\texttt{Object.create}}
   \begin{lstlisting}[gobble=4]
     if (typeof Object.create !== 'function') {
       Object.create = function(obj) {
@@ -550,9 +550,9 @@
     var micia = Object.create(cody);
     micia.name = 'Micia';
     micia.meow = function() {
-      this.say('Meow');
+      this.say('Meow!');
     }
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -571,9 +571,9 @@
     copyProperties(cody, micia);
     micia.name = 'Micia';
     micia.meow = function() {
-      this.say('Meow');
+      this.say('Meow!');
     }
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -599,22 +599,22 @@
   \begin{lstlisting}[gobble=4]
     var Animal = function(name) {
       this.name = name;
-    }
+    };
     Animal.prototype.say = function(t) {
       console.log(this.name + ': ' + t);
-    }
+    };
     
     var Cat = function(name) {
       this.name = name;
-    }
+    };
     Cat.prototype = new Animal();
     Cat.prototype.constructor = Cat;
     Cat.prototype.meow = function() {
-      this.say('Meow');
-    }
+      this.say('Meow!');
+    };
     
     var micia = new Cat('Micia');
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -634,12 +634,12 @@
       this.name = name;
     }, {
       meow: function() {
-        this.say('Meow');
+        this.say('Meow!');
       }
     });
     
     var micia = cat('Micia');
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -673,18 +673,18 @@
           console.log(this.name + ': ' + t)
         }
       }
-    }
+    };
     
     var cat = function(name) {
       var that = animal(name);
       that.meow = function() {
-        this.say('Meow');
+        this.say('Meow!');
       }
       return that;
-    }
+    };
     
     var micia = cat('Micia');
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -696,19 +696,19 @@
           console.log(name + ': ' + t)
         }
       }
-    }
+    };
 
     
     var cat = function(name) {
       var that = animal(name);
       that.meow = function() {
-        this.say('Meow');
+        this.say('Meow!');
       }
       return that;
-    }
+    };
     
     var micia = cat('Micia');
-    micia.meow(); // --> Micia: Meow
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -717,12 +717,22 @@
 \subsection{Underscore.js und \texttt{\_.extend}}
 
 \begin{frame}[fragile]{Underscore.js und \texttt{\_.extend}}
+    {direkt-kopierende Vererbung}
   \begin{lstlisting}[basicstyle=\ttfamily,gobble=4]
-    var person = {name: 'Malte'};
-    var contact = {mail: 'm@mlte.de'};
-    var data = {age: 23, sex: 'male'};
-    // extend person with concat and data
-    _.extend(person, contact, data);
+    var cody = {
+      name: 'Cody',
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
+    };
+    var micia = {};
+    _.extend(micia, cody, {
+      name: 'Micia',
+      meow: function() {
+        this.say('Meow!');
+      }
+    });
+    micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
 
@@ -745,46 +755,36 @@
 \subsection{jQuery und \texttt{\$.extend}}
 
 \begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
-  \begin{lstlisting}[gobble=4]
+    {direkt-kopierende Vererbung}
+  \begin{lstlisting}[basicstyle=\ttfamily,gobble=4]
     // shallow copy
-    var person = {name: 'Malte'};
-    var meta = {options: {say: 'Hello'}};
-    $.extend(false, person, meta);
-    person.options.say = 'Good Bye';
-    console.log(meta.options.say); // --> Good Bye
-    
-    // deep copy
-    person = {name: 'Malte'};
-    meta = {options: {say: 'Hello'}};
-    $.extend(true, person, meta);
-    person.options.note = 'Good Bye';
-    console.log(meta.options.say); // --> Hello
+    var cody = {
+      food: ['dried food', 'meat']
+    };
+    var micia = {};
+    $.extend(micia, cody);
+    micia.food.push('fish');
+    console.log(micia.food);
+      // --> ['dried food', 'meat', 'fish']
+    console.log(cody.food);
+      // --> ['dried food', 'meat', 'fish']
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
-  \begin{lstlisting}[gobble=4]
-    var jQuery = {}, $=jQuery;
-    
-    jQuery.extend = function(deep) {
-      var options, name, src, copy, clone, i,
-        target = arguments[1] || {};    
-      for (i = 1; i < arguments.length; i++) {
-        if ((options = arguments[i]) != null) {
-          for (name in options) {
-            src = target[name];
-            copy = options[name];
-            if (deep && copy && jQuery.isPlainObject(copy)) {
-              clone = jQuery.isPlainObject(src) ? src : {};
-              target[name] = jQuery.extend(deep, clone, copy);
-            } else if (copy !== undefined) {
-              target[name] = copy;
-            }
-          }
-        }
-      }
-      return target;
+    {direkt-kopierende Vererbung}
+  \begin{lstlisting}[basicstyle=\ttfamily,gobble=4]
+    // deep copy
+    var cody = {
+      food: ['dried food', 'meat']
     };
+    var micia = {};
+    $.extend(true, micia, cody);
+    micia.food.push('fish');
+    console.log(micia.food);
+      // --> ['dried food', 'meat', 'fish']
+    console.log(cody.food);
+      // --> ['dried food', 'meat']
   \end{lstlisting}
 \end{frame}
 
@@ -818,55 +818,32 @@
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{jQuery und \texttt{\$.isPlainObject}}
-  \begin{lstlisting}[gobble=4]
-    jQuery.isPlainObject = function(obj) {
-      var ownProp = Object.prototype.hasOwnProperty;
-    
-      if (!obj || jQuery.type(obj) !== 'object' ||
-          obj.nodeType || obj == obj.window) {
-        return false;
-      }
-    
-      if (obj.constructor &&
-        !ownProp.call(obj, 'constructor') &&
-        !ownProp.call(obj.constructor.prototype, 'isPrototypeOf')) {
-        return false;
-      }
-    
-      // Own properties are enumerated firstly, so to speed up,
-      // if last one is own, then all properties are own.
-    
-      var key;
-      for (key in obj) {}
-    
-      return key === undefined ||
-        ownProp.call(obj, key);
-    };
-  \end{lstlisting}
-\end{frame}
-
 \subsection{YUI und \texttt{Y.extend}}
 
 \begin{frame}[fragile]{YUI und \texttt{Y.extend}}
+    {prototypische Vererbung}
   \begin{lstlisting}[gobble=4]
-    var Person = function() {
-      this.name = 'Adam';
-    }
-    Person.prototype.getName = function() {
-      return this.name;
+    var Animal = function() {};
+    Animal.prototype.say = function(t) {
+      console.log(this.name + ': ' + t);
     };
-    var Programmer = function(){}
-    Y.extend(Programmer, // the object to modify
-      Person, // the object to inherit
-      {foo: true}, // prototype properties to add/override
-      {limit: 'sky'} // static properties to add/override
-    );
-    
-    var guru = new Programmer();
-    console.log(guru.getName()); // --> Adam
-    console.log(guru.foo); // --> true
-    console.log(Programmer.limit); // --> Sky
+    var Cat = function(name) {
+      this.name = name;
+    };
+    Y.extend(Cat, // the constructor to modify
+      Animal, // the constructor to inherit
+      { // prototype properties to add/override
+        meow: function() {
+          this.say('Meow!')
+        }
+      }, 
+      { // static properties to add/override
+        limit: 'sky'
+      } 
+    );    
+    var micia = new Cat();
+    micia.meow(); // --> Micia: Meow!
+    console.log(Cat.limit); // --> sky
   \end{lstlisting}
 \end{frame}
 
@@ -901,31 +878,286 @@
 \subsection{Backbone.js und \texttt{Backbone.Model.extend}}
 
 \begin{frame}[fragile]{Backbone.js und \texttt{Backbone.Model.extend}}
+    {prototypische Vererbung}
   \begin{lstlisting}[gobble=4]
-    var FooModel = Backbone.Model.extend({
-      f: function() {
-        return 'instance foo';
+    var Animal = Backbone.Model.extend({
+      say: function(t) {
+        console.log(this.get('name') + ': ' + t);
       }
     }, {
-      f: function() {
-        return 'static foo'
-      }
+      limit: 'sky'
     });
     
-    var BarModel = FooModel.extend({
-      f: function() {
-        return 'instance bar'
+    var Cat = Animal.extend({
+      meow: function() {
+        this.say('Meow!');
       }
     }, {
-      f: function() {
-        return 'static bar'
-      }
+      border: 'none'
     });
     
-    var foo = new FooModel();
-    var bar = new BarModel();
+    var micia = new Cat({name: 'Micia'});
+    micia.meow(); // --> Micia: Meow!
+    console.log(Cat.border); // --> none
+    console.log(Cat.limit); // --> undefined
   \end{lstlisting}
 \end{frame}
+
+\subsection{MooTools und \texttt{new Class}}
+
+\begin{frame}[fragile]{MooTools und \texttt{new Class}}
+    {prototypische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var Animal = new Class({
+      initialize: function(name){
+        this.name = name;
+      },
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
+    });
+    var Cat = new Class({
+      Extends: Animal,
+      say: function(t) {
+        this.parent(t + ', Meow!');
+      }
+    });
+    var micia = new Cat('Micia');
+    micia.say('Hi'); // --> Micia: Hi, Meow!
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{MooTools und \texttt{new Class}}
+    {kopierende Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var Animal = new Class({
+      initialize: function(name){
+        this.name = name;
+      },
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
+    });
+    var Dog = new Class({
+      Implements: Animal,
+      bark: function() {
+        this.say('Woof!');
+      }
+    });
+    var cody = new Dog('Cody');
+    cody.bark(); // --> Cody: Woof!
+  \end{lstlisting}
+\end{frame}
+
+\subsection{Prototype und \texttt{Class.create}}
+
+\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
+    {prototypische Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var Animal = Class.create({
+      initialize: function(name){
+        this.name = name;
+      },
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
+    });
+    var Cat = Class.create(Animal, {
+      say: function($super, t) {
+        $super(t + ', Meow!');
+      }
+    });
+    var micia = new Cat('Micia');
+    micia.say('Hi'); // --> Micia: Hi, Meow!
+  \end{lstlisting}
+\end{frame}
+
+\section*{Zusammenfassung}
+
+\begin{frame}{Zusammenfassung}
+  \begin{itemize}
+    \item \alert{Prototypische/differenzielle Vererbung} ist eine \alert{Verallgemeinerung} der
+      klassenbasierten Verberbung.
+    \item \alert{Klassenbasierte Vererbung} kann in JavaScript \alert{simuliert} werden.
+    \item Es muss zwischen \alert{Vererbung durch Verweis} und \alert{Vererbung durch
+      Kopie} unterschieden werden.
+    \item In der Praxis sucht man sich eines der \alert{vielen Frameworks} für
+      \alert{Objektorientierte Programmierung mit JavaScript}.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Crockford on JavaScript}
+  \begin{thebibliography}{1}
+    \bibitem{1} Volume One:
+    \emph{The Early Years}
+    \newblock 25. Januar 2010
+    
+    \bibitem{2} Chapter 2:
+    \emph{And Then There Was JavaScript}
+    \newblock 5. Februar 2010
+    
+    \bibitem{3} Act III:
+    \emph{Function the Ultimate}
+    \newblock 17. Februar 2010
+    
+    \bibitem{4} Episode IV:
+    \emph{The Metamorphosis of Ajax}
+    \newblock 3. März 2010
+    
+    \bibitem{5} Part 5:
+    \emph{The End of All Things}
+    \newblock 31. März 2010
+    
+    %\bibitem{6} Scene 6:
+    %\emph{Loopage}
+    %\newblock 27. August 2010
+    %
+    %\bibitem{7} Level 7:
+    %\emph{ECMAScript 5: The New Parts}
+    %\newblock 29. März 2011
+    %
+    %\bibitem{8} Section 8:
+    %\emph{Programming Style and Your Brain}
+    %\newblock 3. November 2011
+  \end{thebibliography}
+\end{frame}
+
+\begin{frame}{Bücher}
+  \begin{thebibliography}{1}
+    \bibitem{1} David Flanagan
+    \newblock \emph{JavaScript: The Definitive Guide}
+    
+    \bibitem{2} Douglas Crockford
+    \newblock \emph{JavaScript: The Good Parts}
+  \end{thebibliography}
+\end{frame}
+
+\appendix
+
+\section{Anhang}
+
+\subsection{partielle Applikation}
+
+\begin{frame}[fragile]{\texttt{makeArray}}
+  \begin{lstlisting}[gobble=4]
+    var makeArray = function(a) {
+      return Array.prototype.slice.call(a);
+    }
+  \end{lstlisting}  
+\end{frame}
+
+\begin{frame}[fragile]{partielle Applikation}
+  \begin{onlyenv}<1>
+    \begin{lstlisting}[gobble=6]
+      var add = function(a,b) {
+        return a + b;
+      }
+      var inc = partial(add,1);
+      console.log(inc(6)); // --> 7
+    \end{lstlisting}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2>
+    \begin{lstlisting}[gobble=6]
+      var partial = function(func) {
+        var fixed = makeArray(arguments).slice(1);
+        return function() {
+          var args = makeArray(arguments);
+          return func.apply(null, fixed.concat(args));
+        }
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+\end{frame}
+
+\subsection{geschützte Eigenschaften}
+
+\begin{frame}[fragile]{funktionale Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = function(name, secret) {
+      secret = secret || {};
+      secret.name = name;
+      return {
+        say: function(t) {
+          console.log(secret.name + ': ' + t)
+        }
+      }
+    }
+    
+    var cat = function(name) {
+      var that = animal(name);
+      that.meow = function() {
+        this.say('Meow!');
+      };
+      that.name = function() {
+        return secret.name;
+      }
+      return that;
+    }
+    
+    var micia = cat('Micia');
+    micia.meow(); // --> Micia: Meow!
+    console.log(micia.name()); // --> Micia
+  \end{lstlisting}
+\end{frame}
+
+\subsection{Implementierung jQuery}
+
+\begin{frame}[fragile]{jQuery und \texttt{\$.extend}}
+  \begin{lstlisting}[gobble=4]
+    var jQuery = {}, $=jQuery;
+    
+    jQuery.extend = function(deep) {
+      var options, name, src, copy, clone, i,
+        target = arguments[1] || {};    
+      for (i = 1; i < arguments.length; i++) {
+        if ((options = arguments[i]) != null) {
+          for (name in options) {
+            src = target[name];
+            copy = options[name];
+            if (deep && copy && jQuery.isPlainObject(copy)) {
+              clone = jQuery.isPlainObject(src) ? src : {};
+              target[name] = jQuery.extend(deep, clone, copy);
+            } else if (copy !== undefined) {
+              target[name] = copy;
+            }
+          }
+        }
+      }
+      return target;
+    };
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{jQuery und \texttt{\$.isPlainObject}}
+  \begin{lstlisting}[gobble=4]
+    jQuery.isPlainObject = function(obj) {
+      var ownProp = Object.prototype.hasOwnProperty;
+    
+      if (!obj || jQuery.type(obj) !== 'object' ||
+          obj.nodeType || obj == obj.window) {
+        return false;
+      }
+    
+      if (obj.constructor &&
+        !ownProp.call(obj, 'constructor') &&
+        !ownProp.call(obj.constructor.prototype, 'isPrototypeOf')) {
+        return false;
+      }
+    
+      // Own properties are enumerated firstly, so to speed up,
+      // if last one is own, then all properties are own.
+    
+      var key;
+      for (key in obj) {}
+    
+      return key === undefined ||
+        ownProp.call(obj, key);
+    };
+  \end{lstlisting}
+\end{frame}
+
+\subsection{Implementierung Backbone}
 
 \begin{frame}[fragile]{Backbone.js und \texttt{Backbone.Model.extend}}
   \begin{lstlisting}[gobble=4]
@@ -965,31 +1197,7 @@
   \end{lstlisting}
 \end{frame}
 
-\subsection{MooTools und \texttt{new Class}}
-
-\begin{frame}[fragile]{MooTools und \texttt{new Class}}
-  \begin{lstlisting}[gobble=4]
-    var Animal = new Class({
-      initialize: function(age){
-        this.age = age;
-      }
-    });
-    var Cat = new Class({
-      Extends: Animal,
-      setName: function(name){
-        this.name = name
-      }
-    });
-    var Dog = new Class({
-      Implements: Animal,
-      setName: function(name){
-        this.name = name
-      }
-    });
-    var cat = new Cat(20);
-    var dog = new Dog(7);
-  \end{lstlisting}
-\end{frame}
+\subsection{Implementierung MooTools}
 
 \begin{frame}[fragile]{MooTools und \texttt{new Class}}
   \begin{lstlisting}[gobble=4]
@@ -1045,30 +1253,7 @@
   \end{lstlisting}
 \end{frame}
 
-\subsection{Prototype und \texttt{Class.create}}
-
-\begin{frame}[fragile]{Prototype und \texttt{Class.create}}
-  \begin{lstlisting}[gobble=4]
-    var Person = Class.create({
-      initialize: function(name) {
-        this.name = name;
-      },
-      say: function(message) {
-        return this.name + ': ' + message;
-      }
-    });
-    
-    var Pirate = Class.create(Person, {
-      say: function($super, message) {
-        return $super(message) + ', yarr!';
-      }
-    });
-    
-    var john = new Pirate('Long John');
-    console.log(john.say('ahoy matey'));
-        // --> Long John: ahoy matey, yarr!
-  \end{lstlisting}
-\end{frame}
+\subsection{Implementierung Prototype}
 
 \begin{frame}[fragile]{Prototype und \texttt{Class.create}}
   \begin{lstlisting}[gobble=4]
@@ -1132,135 +1317,6 @@
         .replace(/\s+/g, '').split(',');
       return names.length == 1 && !names[0] ? [] : names;
     }
-  \end{lstlisting}
-\end{frame}
-
-\section*{Zusammenfassung}
-
-\begin{frame}{Zusammenfassung}
-  \begin{itemize}
-    \item \alert{Prototypische/differenzielle Vererbung} ist eine \alert{Verallgemeinerung} der
-      klassenbasierten Verberbung.
-    \item \alert{Klassenbasierte Vererbung} kann in JavaScript \alert{simuliert} werden.
-    \item Es muss zwischen \alert{prototypischer Vererbung} und \alert{Vererbung durch
-      Kopieren} unterschieden werden.
-    \item In der Praxis sucht man sich eines der \alert{vielen Frameworks} für
-      \alert{Objektorientierte Programmierung mit JavaScript}.
-  \end{itemize} 
-\end{frame}
-
-\begin{frame}{Crockford on JavaScript}
-  \begin{thebibliography}{1}
-    \bibitem{1} Volume One:
-    \emph{The Early Years}
-    \newblock 25. Januar 2010
-    
-    \bibitem{2} Chapter 2:
-    \emph{And Then There Was JavaScript}
-    \newblock 5. Februar 2010
-    
-    \bibitem{3} Act III:
-    \emph{Function the Ultimate}
-    \newblock 17. Februar 2010
-    
-    \bibitem{4} Episode IV:
-    \emph{The Metamorphosis of Ajax}
-    \newblock 3. März 2010
-    
-    \bibitem{5} Part 5:
-    \emph{The End of All Things}
-    \newblock 31. März 2010
-    
-    %\bibitem{6} Scene 6:
-    %\emph{Loopage}
-    %\newblock 27. August 2010
-    %
-    %\bibitem{7} Level 7:
-    %\emph{ECMAScript 5: The New Parts}
-    %\newblock 29. März 2011
-    %
-    %\bibitem{8} Section 8:
-    %\emph{Programming Style and Your Brain}
-    %\newblock 3. November 2011
-  \end{thebibliography}
-\end{frame}
-
-\begin{frame}{Bücher}
-  \begin{thebibliography}{1}
-    \bibitem{1} David Flanagan
-    \newblock \emph{JavaScript: The Definitive Guide}
-    
-    \bibitem{2} Douglas Crockford
-    \newblock \emph{JavaScript: The Good Parts}
-  \end{thebibliography}
-\end{frame}
-
-\appendix
-
-\section{Anhang}
-
-\subsection{partielle Applikation}
-
-\begin{frame}[fragile]{\lstinline-makeArray-}
-  \begin{lstlisting}[gobble=4]
-    var makeArray = function(a) {
-      return Array.prototype.slice.call(a);
-    }
-  \end{lstlisting}  
-\end{frame}
-
-\begin{frame}[fragile]{partielle Applikation}
-  \begin{onlyenv}<1>
-    \begin{lstlisting}[gobble=6]
-      var add = function(a,b) {
-        return a + b;
-      }
-      var inc = partial(add,1);
-      console.log(inc(6)); // --> 7
-    \end{lstlisting}
-  \end{onlyenv}
-  
-  \begin{onlyenv}<2>
-    \begin{lstlisting}[gobble=6]
-      var partial = function(func) {
-        var fixed = makeArray(arguments).slice(1);
-        return function() {
-          var args = makeArray(arguments);
-          return func.apply(null, fixed.concat(args));
-        }
-      }
-    \end{lstlisting}
-  \end{onlyenv}
-\end{frame}
-
-\subsection{geschützte Eigenschaften}
-
-\begin{frame}[fragile]{funktionale Vererbung}
-  \begin{lstlisting}[gobble=4]
-    var animal = function(name, secret) {
-      secret = secret || {};
-      secret.name = name;
-      return {
-        say: function(t) {
-          console.log(secret.name + ': ' + t)
-        }
-      }
-    }
-    
-    var cat = function(name) {
-      var that = animal(name);
-      that.meow = function() {
-        this.say('Meow');
-      };
-      that.name = function() {
-        return secret.name;
-      }
-      return that;
-    }
-    
-    var micia = cat('Micia');
-    micia.meow(); // --> Micia: Meow
-    console.log(micia.name()); // --> Micia
   \end{lstlisting}
 \end{frame}
 
