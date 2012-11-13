@@ -16,6 +16,21 @@ var data = {age: 23, sex: 'male'};
 // extend person with concat and data
 _.extend(person, contact, data);
 printObject(person);
+
+var cody = {
+  name: 'Cody',
+  say: function(t) {
+    println(this.name + ': ' + t);
+  }
+};
+var micia = {};
+_.extend(micia, cody, {
+  name: 'Micia',
+  meow: function() {
+    this.say('Meow');
+  }
+});
+micia.meow(); // --> Micia: Meow
 </script>
 </body>
 </html>

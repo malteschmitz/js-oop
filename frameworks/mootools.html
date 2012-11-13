@@ -51,6 +51,42 @@ Cat.implement({bar: function() { return "23" }});
 // same as
 // Cat.prototype.bar = function() { return "23" };
 println(myAnimal.bar()); // 23
+
+
+var Animal = new Class({
+  initialize: function(name){
+    this.name = name;
+  },
+  say: function(t) {
+    println(this.name + ': ' + t);
+  }
+});
+var Cat = new Class({
+  Extends: Animal,
+  say: function(t) {
+    this.parent(t + ', Meow');
+  }
+});
+var micia = new Cat('Micia');
+micia.say('Hi'); // --> Micia: Hi, Meow
+
+
+var Animal = new Class({
+  initialize: function(name){
+    this.name = name;
+  },
+  say: function(t) {
+    println(this.name + ': ' + t);
+  }
+});
+var Dog = new Class({
+  Implements: Animal,
+  bark: function() {
+    this.say('Woof');
+  }
+});
+var cody = new Dog('Cody');
+cody.bark(); // --> Cody: Woof
 </script>
 </body>
 </html>

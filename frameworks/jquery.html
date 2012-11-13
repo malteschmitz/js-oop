@@ -37,6 +37,25 @@ p.options.note = "Good Bye";
 p.ids.push(3);
 printObject(q);
 printObject(p);
+
+// deep copy
+var cody = {
+  name: 12,
+  food: ['dried food', 'meat']
+};
+var micia = {};
+$.extend(true, micia, cody);
+micia.food.push('fish');
+println(micia.food); // --> ['dried food', 'meat', 'fish']
+println(cody.food); // --> ['dried food', 'meat']
+
+// shallow copy
+micia = {};
+$.extend(micia, cody);
+micia.food.push('fish');
+println(micia.food); // --> ['dried food', 'meat', 'fish']
+println(cody.food); // --> ['dried food', 'meat', 'fish']
+
 </script>
 </body>
 </html>

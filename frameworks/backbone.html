@@ -36,6 +36,27 @@ println(foo.f());
 println(bar.f());
 println(FooModel.f());
 println(BarModel.f());
+
+var Animal = Backbone.Model.extend({
+  say: function(t) {
+    println(this.get('name') + ': ' + t);
+  }
+}, {
+  limit: 'sky'
+});
+
+var Cat = Animal.extend({
+  meow: function() {
+    this.say('Meow');
+  }
+}, {
+  border: 'none'
+});
+
+var micia = new Cat({name: 'Micia'});
+micia.meow(); // --> Micia: Meow
+println(Cat.border); // --> none
+println(Cat.sky); // --> undefined
 </script>
 </body>
 </html>

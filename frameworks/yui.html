@@ -78,6 +78,32 @@ YUI().use('oop', function(Y){
   
   // use
   println(batman.say()); // I am Bruce Wayne
+  
+  
+  var Animal = function(name) {
+    this.name = name;
+  }
+  Animal.prototype.say = function(t) {
+    println(this.name + ': ' + t);
+  };
+  var Cat = function(name){
+    this.name = name;
+  };
+  Y.extend(Cat, // the constructor to modify
+    Animal, // the constructor to inherit
+    { // prototype properties to add/override
+      meow: function() {
+        this.say('Meow')
+      }
+    }, 
+    { // static properties to add/override
+      limit: 'sky'
+    } 
+  );
+  
+  var micia = new Cat('Micia');
+  micia.meow(); // --> Micia: Meow
+  println(Cat.limit); // --> sky
 });
 </script>
 </body>

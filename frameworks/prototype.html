@@ -29,6 +29,22 @@ var Pirate = Class.create(Person, {
 
 var john = new Pirate('Long John');
 println(john.say('ahoy matey'));
+
+var Animal = Class.create({
+  initialize: function(name){
+    this.name = name;
+  },
+  say: function(t) {
+    println(this.name + ': ' + t);
+  }
+});
+var Cat = Class.create(Animal, {
+  say: function($super, t) {
+    $super(t + ', Meow');
+  }
+});
+var micia = new Cat('Micia');
+micia.say('Hi'); // --> Micia: Hi, Meow
 </script>
 </body>
 </html>
