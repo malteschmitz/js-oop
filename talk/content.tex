@@ -30,7 +30,12 @@
 }
 
 \usepackage{tikz}
-\usetikzlibrary{shapes.multipart,positioning,arrows}
+\usetikzlibrary{%
+  shapes.multipart,%
+  positioning,%
+  arrows,%
+  decorations.pathreplacing%
+}
 
 \usepackage{listings}
 \lstdefinelanguage{JavaScript}{
@@ -198,7 +203,7 @@
 
 \begin{frame}[fragile]{Objektliterale}
   \begin{lstlisting}[gobble=4]
-    var cat = {
+    var micia = {
       name: 'Micia',
       age: 12
     }
@@ -207,8 +212,8 @@
 
 \begin{frame}[fragile]{Iteration über Objekteigenschaften}
   \begin{lstlisting}[gobble=4]
-    for (var key in cat) {
-      var value = cat[key];
+    for (var key in micia) {
+      var value = micia[key];
       console.log(key + ': ' + value);
     }
   \end{lstlisting}
@@ -217,10 +222,10 @@
 \begin{frame}[fragile]{\texttt{\&\&} und \texttt{||}}
   \begin{lstlisting}[gobble=4]
     // guard operator
-    var name = cat && cat.name;
+    var name = micia && micia.name;
     
     // default operator
-    var obj = cat || {};
+    var obj = micia || {};
   \end{lstlisting}
 \end{frame}
 
@@ -235,8 +240,8 @@
   \vskip5ex
   
   \begin{lstlisting}[gobble=4]
-    if (cat.name) {
-      console.log(cat.name);
+    if (micia.name) {
+      console.log(micia.name);
     }
   \end{lstlisting}
 \end{frame}
@@ -277,41 +282,41 @@
 \begin{frame}[fragile]{differenzielle Vererbung}
   \begin{tikzpicture}[shorten >=1pt]
     \uncover<4->{
-      \node[inner sep=0pt] (cat) {
+      \node[inner sep=0pt] (micia) {
         \begin{tabular}{|l|l|}
           \hline
           proto & \\ \hline
           \uncover<6-7>{\lstinline-name-} & \uncover<6-7>{\lstinline-Micia-} \\ \hline 
         \end{tabular}
       };
-      \node[anchor=south west,inner sep=1pt] at (cat.north west) {\lstinline-cat-};
-      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (cat.center) (cat dot) {};
+      \node[anchor=south west,inner sep=1pt] at (micia.north west) {\lstinline-micia-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (micia.center) (micia dot) {};
     }
     \uncover<2->{
-      \node[inner sep=0pt,node distance=1em,right=of cat] (dog) {
+      \node[inner sep=0pt,node distance=1em,right=of micia] (cody) {
         \begin{tabular}{|l|l|}
           \hline
           proto & \\ \hline
           \lstinline-name- & \lstinline-Cody- \\ \hline 
         \end{tabular}
       };
-      \node[anchor=south west,inner sep=1pt] at (dog.north west) {\lstinline-dog-};
-      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (dog.center) (dog dot) {};
-      \node[right=of dog dot] (obj) {\lstinline-Object.prototype-};
+      \node[anchor=south west,inner sep=1pt] at (cody.north west) {\lstinline-cody-};
+      \node[circle,draw,fill,inner sep=2pt,xshift=2em,yshift=1.5ex] at (cody.center) (cody dot) {};
+      \node[right=of cody dot] (obj) {\lstinline-Object.prototype-};
     }
-    \only<4->{\draw[->] (cat dot) edge (dog.west |- cat dot);}
-    \only<2->{\draw[->] (dog dot) edge (obj);}
+    \only<4->{\draw[->] (micia dot) edge (cody.west |- micia dot);}
+    \only<2->{\draw[->] (cody dot) edge (obj);}
   \end{tikzpicture}
   
   \vskip3ex
   
-  \uncover<1->{\lstinline-var dog = \{name: 'Cody'\};-}\\
-  \uncover<3->{\lstinline-var cat = Object.create(dog);-}\\
-  \uncover<4->{\lstinline|console.log(cat.name); // --> Cody|}
-  \uncover<5->{\lstinline-cat.name = 'Micia';-}\\
-  \uncover<6->{\lstinline|console.log(cat.name); // --> Micia|}
-  \uncover<7->{\lstinline-delete cat.name;-}
-  \uncover<8->{\lstinline|console.log(cat.name); // --> Cody|}
+  \uncover<1->{\lstinline-var cody = \{name: 'Cody'\};-}\\
+  \uncover<3->{\lstinline-var micia = Object.create(cody);-}\\
+  \uncover<4->{\lstinline|console.log(micia.name); // --> Cody|}
+  \uncover<5->{\lstinline-micia.name = 'Micia';-}\\
+  \uncover<6->{\lstinline|console.log(micia.name); // --> Micia|}
+  \uncover<7->{\lstinline-delete micia.name;-}
+  \uncover<8->{\lstinline|console.log(micia.name); // --> Cody|}
 \end{frame}
 
 \subsection{Funktionen}
@@ -373,11 +378,11 @@
     sum.call(window, 1, 2, 3);
     
     
-    cat.add = sum;
+    micia.add = sum;
     
-    cat.add(1,2,3);
-    sum.apply(cat, [1, 2, 3]);
-    sum.call(cat, 1, 2, 3);
+    micia.add(1,2,3);
+    sum.apply(micia, [1, 2, 3]);
+    sum.call(micia, 1, 2, 3);
   \end{lstlisting}
 \end{frame}
 
@@ -422,12 +427,27 @@
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}{Funktionen}
+  \begin{center}
+    \begin{tikzpicture}
+      \node[text width=2.6cm] (n) {
+        Funktion \\
+        Methode \\
+        Klasse \\
+        Konstruktor \\
+        Modul
+      };
+      \draw[decoration={brace,amplitude=5},decorate,thick] (n.north east) -- node [right=.3cm] {\lstinline-function() {}-} (n.south east);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
 \begin{frame}[fragile]{Iteration über \emph{eigene} Objekteigenschaften}
   \begin{lstlisting}[gobble=4]
-    for (var key in cat) {
+    for (var key in micia) {
       if (Object.prototype.
-          hasOwnProperty.apply(cat, key)) {
-        var value = cat[key];
+          hasOwnProperty.apply(micia, key)) {
+        var value = micia[key];
         console.log(key + ': ' + value);
       }
     }
@@ -454,11 +474,10 @@
     rectangle split,
     rectangle split parts=3,
     draw,
-    text width=#1,
-    fill=white!9!black
+    text width=#1
   },  
   inherits/.style={
-    ->,
+    ->, thick,
     >=open triangle 90,
     shorten >=1pt
   }
@@ -520,20 +539,20 @@
 
 \begin{frame}[fragile]{direkt-prototypische Vererbung}
   \begin{lstlisting}[gobble=4]
-    var animal = {
-      toString: function() {
-        return this.name;
-      },
-      name: 'animal'
+    var cody = {
+      name: 'Cody',
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
     };
     
     
-    var cat = Object.create(animal);
-    cat.name = 'Micia';
-    cat.meow = function() {
-      console.log(this.name + ': Meow!');
+    var micia = Object.create(cody);
+    micia.name = 'Micia';
+    micia.meow = function() {
+      this.say('Meow');
     }
-    console.log(cat); // --> Micia
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
@@ -541,20 +560,20 @@
 
 \begin{frame}[fragile]{direkt-kopierende Vererbung}
   \begin{lstlisting}[gobble=4]
-    var animal = {
-      toString: function() {
-        return this.name;
-      },
-      name: 'animal'
+    var cody = {
+      name: 'Cody',
+      say: function(t) {
+        console.log(this.name + ': ' + t);
+      }
     };
       
-    var cat = {};
-    copyProperties(animal, cat);
-    cat.name = 'Micia';
-    cat.meow = function() {
-      console.log(this.name + ': Meow!');
+    var micia = {};
+    copyProperties(cody, micia);
+    micia.name = 'Micia';
+    micia.meow = function() {
+      this.say('Meow');
     }
-    console.log(cat); // --> Micia
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
@@ -562,7 +581,7 @@
   \begin{lstlisting}[gobble=4]
     var ownProp = Object.prototype.hasOwnProperty;
   
-    var copyProperties = function(from,to) {
+    var copyProperties = function(from, to) {
       for (var key in from) {
         if (ownProp.call(from, key)) {
           to[key] = from[key];
@@ -579,10 +598,10 @@
 \begin{frame}[fragile]{pseudoklassische Vererbung}
   \begin{lstlisting}[gobble=4]
     var Animal = function(name) {
-      this.name = name.toUpperCase();
+      this.name = name;
     }
-    Animal.prototype.toString = function() {
-      return this.name;
+    Animal.prototype.say = function(t) {
+      console.log(this.name + ': ' + t);
     }
     
     var Cat = function(name) {
@@ -591,11 +610,11 @@
     Cat.prototype = new Animal();
     Cat.prototype.constructor = Cat;
     Cat.prototype.meow = function() {
-      console.log(this.name + ': Meow!');
+      this.say('Meow');
     }
     
-    var cat = new Cat('Micia');
-    console.log(cat); // --> MICIA
+    var micia = new Cat('Micia');
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
@@ -604,10 +623,10 @@
 \begin{frame}[fragile]{prototypische Vererbung}
   \begin{lstlisting}[gobble=4]
     var animal = makeConstructor(Object, function(name) {
-      this.name = name.toUpperCase();
+      this.name = name;
     }, {
-      toString: function() {
-        return this.name;
+      say: function(t) {
+        console.log(this.name + ': ' + t);
       }
     });
     
@@ -615,18 +634,20 @@
       this.name = name;
     }, {
       meow: function() {
-        console.log(this.name + ': Meow!');
+        this.say('Meow');
       }
     });
     
-    var c = cat('Micia');
-    console.log(c); // --> MICIA
+    var micia = cat('Micia');
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{prototypische Vererbung}
   \begin{lstlisting}[gobble=4]
     var makeConstructor = function(extend, initializer, methods) {
+      var proto = Object.create(extend && extend.prototype);
+      copyProperties(methods, proto);
       var func = function() {
         var that = Object.create(proto);
         if (typeof initializer === 'function') {
@@ -634,8 +655,6 @@
         }
         return that;
       }
-      var proto = Object.create(extend && extend.prototype);
-      copyProperties(methods, proto);
       func.prototype = proto;
       proto.constructor = func;
       return func;
@@ -649,9 +668,9 @@
   \begin{lstlisting}[gobble=4]
     var animal = function(name) {
       return {
-        name: name.toUpperCase(),
-        toString: function() {
-          return this.name;
+        name: name,
+        say: function(t) {
+          console.log(this.name + ': ' + t)
         }
       }
     }
@@ -659,63 +678,37 @@
     var cat = function(name) {
       var that = animal(name);
       that.meow = function() {
-        console.log(this.name + ': Meow!');
+        this.say('Meow');
       }
       return that;
     }
     
-    var c = cat('Micia');
-    console.log(c); // --> MICIA
+    var micia = cat('Micia');
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{funktionale Vererbung}
   \begin{lstlisting}[gobble=4]
     var animal = function(name) {
-      name = name.toUpperCase();
       return {
-        toString: function() {
-          return name;
+        say: function(t) {
+          console.log(name + ': ' + t)
         }
       }
     }
+
     
     var cat = function(name) {
       var that = animal(name);
       that.meow = function() {
-        console.log('???' + ': Meow!');
+        this.say('Meow');
       }
       return that;
     }
     
-    var c = cat('Micia');
-    console.log(c); // --> MICIA
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{funktionale Vererbung}
-  \begin{lstlisting}[gobble=4]
-    var animal = function(name, secret) {
-      secret = secret || {};
-      secret.name = name.toUpperCase();
-      return {
-        toString: function() {
-          return secret.name;
-        }
-      }
-    }
-    
-    var cat = function(name) {
-      var secret = {};
-      var that = animal(name, secret);
-      that.meow = function() {
-        console.log(secret.name + ': Meow!');
-      }
-      return that;
-    }
-    
-    var c = cat('Micia');
-    console.log(c); // --> MICIA
+    var micia = cat('Micia');
+    micia.meow(); // --> Micia: Meow
   \end{lstlisting}
 \end{frame}
 
@@ -1238,6 +1231,37 @@
       }
     \end{lstlisting}
   \end{onlyenv}
+\end{frame}
+
+\subsection{geschützte Eigenschaften}
+
+\begin{frame}[fragile]{funktionale Vererbung}
+  \begin{lstlisting}[gobble=4]
+    var animal = function(name, secret) {
+      secret = secret || {};
+      secret.name = name;
+      return {
+        say: function(t) {
+          console.log(secret.name + ': ' + t)
+        }
+      }
+    }
+    
+    var cat = function(name) {
+      var that = animal(name);
+      that.meow = function() {
+        this.say('Meow');
+      };
+      that.name = function() {
+        return secret.name;
+      }
+      return that;
+    }
+    
+    var micia = cat('Micia');
+    micia.meow(); // --> Micia: Meow
+    console.log(micia.name()); // --> Micia
+  \end{lstlisting}
 \end{frame}
 
 \end{document}
