@@ -88,7 +88,7 @@
       author: 'Malte Schmitz',
       date: new Date(2012, 10, 16),
       event: 'MetaNook'
-    }
+    };
   \end{lstlisting}
   \end{columns}
 \end{frame}
@@ -206,7 +206,7 @@
     var micia = {
       name: 'Micia',
       age: 12
-    }
+    };
   \end{lstlisting}
 \end{frame}
 
@@ -419,7 +419,7 @@
       this.name = name;
     };
     Animal.prototype.say = function(t) {
-      console.log(this.name + ': ' + t)
+      console.log(this.name + ': ' + t);
     };
     
     var erwin = new Animal('Erwin');
@@ -551,7 +551,7 @@
     micia.name = 'Micia';
     micia.meow = function() {
       this.say('Meow!');
-    }
+    };
     micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
@@ -572,7 +572,7 @@
     micia.name = 'Micia';
     micia.meow = function() {
       this.say('Meow!');
-    }
+    };
     micia.meow(); // --> Micia: Meow!
   \end{lstlisting}
 \end{frame}
@@ -670,7 +670,7 @@
       return {
         name: name,
         say: function(t) {
-          console.log(this.name + ': ' + t)
+          console.log(this.name + ': ' + t);
         }
       }
     };
@@ -693,7 +693,7 @@
     var animal = function(name) {
       return {
         say: function(t) {
-          console.log(name + ': ' + t)
+          console.log(name + ': ' + t);
         }
       }
     };
@@ -1042,7 +1042,7 @@
   \begin{lstlisting}[gobble=4]
     var makeArray = function(a) {
       return Array.prototype.slice.call(a);
-    }
+    };
   \end{lstlisting}  
 \end{frame}
 
@@ -1051,7 +1051,7 @@
     \begin{lstlisting}[gobble=6]
       var add = function(a,b) {
         return a + b;
-      }
+      };
       var inc = partial(add,1);
       console.log(inc(6)); // --> 7
     \end{lstlisting}
@@ -1064,8 +1064,8 @@
         return function() {
           var args = makeArray(arguments);
           return func.apply(null, fixed.concat(args));
-        }
-      }
+        };
+      };
     \end{lstlisting}
   \end{onlyenv}
 \end{frame}
@@ -1079,7 +1079,7 @@
       secret.name = name;
       return {
         say: function(t) {
-          console.log(secret.name + ': ' + t)
+          console.log(secret.name + ': ' + t);
         }
       }
     }    
