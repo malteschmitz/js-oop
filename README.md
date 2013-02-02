@@ -104,5 +104,14 @@ Beispiele
 Das Verzeichnis talk enthält den LaTeX-Quellcode des Vortrags. Das Verzeichnis
 basics enthält die grundlegenden JavaScript-Beispiele. Das Verzeichnis
 frameworks enthält die Beispiele zum dritten Abschnitt und libs enthält die
-verwendeten Bibliotheken. Im Downloadbereich des Repositorys befinden
+verwendeten Bibliotheken.
+
+Downloads
+---------
+
+Hier befinden
 sich die gerenderten PDF-Dateien des Vortrags.
+
+* [Vortrag (Version in Farbe)](http://uni.mlte.de/downloads/js-oop.pdf)
+* [Vortrag (Version in Graustufen)](http://uni.mlte.de/downloads/js-oop-bw.pdf)
+* [Vortrag (Version in Graustufen mit vier Folien pro Seite)](http://uni.mlte.de/downloads/js-oop-bw-4on1.pdf)
