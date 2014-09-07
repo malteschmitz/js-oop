@@ -112,6 +112,6 @@ Downloads
 Hier befinden
 sich die gerenderten PDF-Dateien des Vortrags.
 
-* [Vortrag (Version in Farbe)](http://uni.mlte.de/downloads/js-oop.pdf)
-* [Vortrag (Version in Graustufen)](http://uni.mlte.de/downloads/js-oop-bw.pdf)
-* [Vortrag (Version in Graustufen mit vier Folien pro Seite)](http://uni.mlte.de/downloads/js-oop-bw-4on1.pdf)
+* [Vortrag (Version in Farbe)](http://www.mlte.de/downloads/js-oop.pdf)
+* [Vortrag (Version in Graustufen)](http://www.mlte.de/downloads/js-oop-bw.pdf)
+* [Vortrag (Version in Graustufen mit vier Folien pro Seite)](http://www.mlte.de/downloads/js-oop-bw-4on1.pdf)
